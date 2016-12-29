@@ -18,8 +18,10 @@ love.run = function ()
 	 love.handlers[name](a,b,c,d,e,f)
       end
 
+      love.graphics.setBlendMode("alpha", "alphamultiply")
       state.update()
-      canvas:renderTo(function () state.draw() end)
+      canvas:renderTo(state.draw)
+      love.graphics.setBlendMode("replace", "premultiplied")
       love.graphics.draw(canvas)
       love.graphics.present()
    end
