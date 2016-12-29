@@ -1,3 +1,5 @@
+-- Ghor: faster to use metatables
+
 local stack = {}
 
 return {
