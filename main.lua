@@ -1,7 +1,12 @@
+local state = require "state"
 local draw = require "draw"
+local game = require "game"
 
 love.run = function ()
    love.math.setRandomSeed(os.time())
+   state.push(game)
+
+   canvas = love.graphics.newCanvas(240, 160)
 
    while true do
       love.event.pump()
@@ -14,7 +19,8 @@ love.run = function ()
 	 love.handlers[name](a,b,c,d,e,f)
       end
 
-      draw.draw()
+      state.update()
+      canvas:renderTo(state.draw)
       love.graphics.present()
    end
 end
