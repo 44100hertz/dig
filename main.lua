@@ -1,5 +1,4 @@
 local state = require "state"
-local draw = require "draw"
 local game = require "game"
 
 love.run = function ()
@@ -20,7 +19,8 @@ love.run = function ()
       end
 
       state.update()
-      canvas:renderTo(state.draw)
+      canvas:renderTo(function () state.draw() end)
+      love.graphics.draw(canvas)
       love.graphics.present()
    end
 end

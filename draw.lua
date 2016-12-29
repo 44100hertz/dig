@@ -8,7 +8,7 @@ return {
    -- Automagically add to the batch.
    -- Will not make multiple sized quads in the same offset.
    -- Units are in 16 pixels.
-   add = function (x, y, w, h, draw_x, draw_y, flip)
+   add = function (x, y, draw_x, draw_y, w, h, flip)
       if not quads[y] then quads[y] = {} end
       if not quads[y][x] then
 	 w = w or 1
@@ -24,7 +24,7 @@ return {
 
    -- Draw everything in the given sprite batch
    draw = function (x, y)
-      love.graphics.draw(sb, x or 0, y or 0)
+      love.graphics.draw(sb, x, y)
       sb:clear()
    end
 }
