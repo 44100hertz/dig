@@ -14,31 +14,51 @@ local rng = function (num)
    return math.floor(math.random() * num+1)
 end
 
-local gen_row = function ()
-   local row = {}
-   for i = 0,15 do row[i] = 1 end
+local gen_row = function (row)
+   sand[row] = {}
+   for i = 0,15 do sand[row][i] = 1 end
    num_rocks = rng(2)
    num_gaps = rng(2)
-   for _ = 1,num_rocks do row[rng(15)] = 2 end
-   for _ = 1,num_gaps do row[rng(15)] = 0 end
-   return row
+   for _ = 1,num_rocks do sand[row][rng(15)] = 2 end
+   for _ = 1,num_gaps do sand[row][rng(15)] = 0 end
+
+   -- Sometimes make big rocks
+   if math.random() < 0.5 and row > 10 then
+      local br_x = rng(14)+1 -- Find a valid x pos
+      if sand[row][br_x] < 2 -- Check if usable spaces
+	 and sand[row][br_x-1] < 2
+	 and sand[row-1][br_x] < 2
+	 and sand[row-1][br_x-1] < 2
+      then
+	 sand[row-1][br_x-1] = 9
+	 sand[row-1][br_x] = 10
+	 sand[row][br_x-1] = 11
+	 sand[row][br_x] = 12
+      end
+   end
 end
 
 local draw_tile = function(x, y)
-   if sand[y][x] == 1 then
+   if sand[y][x] == 1 then -- Sand
       draw.add(x%2, y%2, x*16, y*16)
-   elseif sand[y][x] == 0 then
+   elseif sand[y][x] == 0 then -- Nothing
       draw.add(x%2+2, y%2, x*16, y*16)
-   elseif sand[y][x] == 2 then
+   elseif sand[y][x] == 2 then -- Rock
       draw.add(4, 2, x*16, y*16)
+   elseif sand[y][x] == 9 then -- Big rock cases
+      draw.add(5, 2, x*16, y*16)
+   elseif sand[y][x] == 10 then -- Big rock cases
+      draw.add(6, 2, x*16, y*16)
+   elseif sand[y][x] == 11 then -- Big rock cases
+      draw.add(5, 3, x*16, y*16)
+   elseif sand[y][x] == 12 then -- Big rock cases
+      draw.add(6, 3, x*16, y*16)
    end
 end
 
 return {
    init = function ()
-      for y = 0,15 do
-	 sand[y] = gen_row()
-      end
+      for y = 0,15 do gen_row(y) end
    end,
 
    update = function (scroll)
@@ -47,7 +67,7 @@ return {
       -- If sand are offscreen, generate more
       if not sand[maxoff] then
 	 sand[tile_off-1] = nil
-	 sand[maxoff] = gen_row()
+	 gen_row(maxoff)
       end
    end,
 
