@@ -1,3 +1,5 @@
+-- JuicyHoboBear: what you need to do is have it like in your mp4 you linked, split the screen up into 3 and fold them away revealing the level when you die/start a new map
+
 local draw = require "draw"
 local actors = require "actors"
 
