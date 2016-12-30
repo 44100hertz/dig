@@ -7,15 +7,15 @@ local actors = require "actors"
 -- 15x15 tiles loaded onscreen; 5 above you
 -- tile_off says where to start, moves up with the game
 -- for each tile, true = sand, false = none
-local tiles = {}
+local sand = {}
 local tile_off = 0
 
 return {
    init = function ()
       for y = 0,15 do
-	 tiles[y] = {}
+	 sand[y] = {}
 	 for x = 0,15 do
-	    tiles[y][x] = true
+	    sand[y][x] = true
 	 end
       end
    end,
@@ -23,21 +23,21 @@ return {
    update = function (scroll)
       tile_off = math.floor(scroll / 16)
       local maxoff = tile_off+15
-      -- If tiles are offscreen, generate more
-      if not tiles[maxoff] then
-	 tiles[tile_off-1] = nil
-	 tiles[maxoff] = {}
+      -- If sand are offscreen, generate more
+      if not sand[maxoff] then
+	 sand[tile_off-1] = nil
+	 sand[maxoff] = {}
 	 for x = 0,15 do
-	    tiles[maxoff][x] = true -- TODO: proper tile generation
+	    sand[maxoff][x] = true -- TODO: proper tile generation
 	 end
       end
    end,
 
    draw = function ()
-      -- Draw 11 rows of tiles; max possible visible
+      -- Draw 11 rows of sand; max possible visible
       for y = tile_off,tile_off+11 do
-	 if tiles[y] then for x = 0,15 do
-	       local tilex = x % 2 + (tiles[y][x] and 0 or 2)
+	 if sand[y] then for x = 0,15 do
+	       local tilex = x % 2 + (sand[y][x] and 0 or 2)
 	       local tiley = y % 2-- TODO: depth randomization
 	       draw.add(tilex, tiley, x*16, y*16)
        	 end end
@@ -45,7 +45,7 @@ return {
    end,
 
    destroy = function (x, y)
-      tiles[y][x] = false
+      sand[y][x] = false
       local puff = {
 	 class = require "actors/particle",
 	 sprite = 0,
@@ -61,7 +61,7 @@ return {
    collide = function (x, y)
       local tx = math.floor(x/16)
       local ty = math.floor(y/16)
-      if tiles[ty] and tiles[ty][tx] then
+      if sand[ty] and sand[ty][tx] then
 	 return tx, ty
       end
    end
