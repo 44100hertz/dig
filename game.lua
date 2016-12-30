@@ -39,7 +39,7 @@ return {
       -- Draw 11 rows of tiles; max possible visible
       for y = tile_off,tile_off+11 do
       	 for x = 0,15 do
-       	    local tilex = x % 2 + (tiles[y+4][x] and 0 or 2)
+       	    local tilex = x % 2 + (tiles[y][x] and 0 or 2)
        	    local tiley = y % 2-- TODO: depth randomization
        	    draw.add(tilex, tiley, x*16, y*16)
        	 end
