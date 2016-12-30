@@ -14,16 +14,34 @@ end
 local jump, floor, air, dig
 
 move = function (self)
-   self.dx =
+   local new_dx =
       bool2num(love.keyboard.isScancodeDown("right")) -
       bool2num(love.keyboard.isScancodeDown("left"))
+   if self.dx > -1 and new_dx == -1 then
+      actors.add({
+	    class=require "actors/particle",
+	    sprite=2,
+	    x=self.x-4,
+	    y=self.y-8,
+	    flip=false,
+      })
+   elseif self.dx < 1 and new_dx == 1 then
+      actors.add({
+	    class=require "actors/particle",
+	    sprite=2,
+	    x=self.x+4,
+	    y=self.y-8,
+	    flip=true,
+      })
+   end
+   self.dx = new_dx
 end
 
 jump = function (self)
-   self.dx = 0
+   self.dx = self.dx / 2
    if self.timer == 4 then
       move(self)
-      self.dy = -2
+      self.dy = -3
       loadstate(self, air)
    end
 end
@@ -31,9 +49,10 @@ end
 floor = function (self)
    if self.timer == 1 then
       actors.add({
-	    class=require "actors/sandpuff", sprite=5,
+	    class=require "actors/particle",
+	    sprite=1,
 	    x=self.x-8,
-	    y=self.y,
+	    y=self.y-8,
       })
    end
    if not self.tx then
@@ -56,7 +75,7 @@ air = function (self)
       self.dy = 0
       self.y = math.floor(self.y / 16) * 16
    else
-      self.dy = math.min(self.dy + 1/8, 2)
+      self.dy = math.min(self.dy + 1/4, 2)
    end
 end
 
@@ -69,7 +88,9 @@ dig = function (self)
 	 tiles.destroy(self.tx, self.ty)
       else
 	 actors.add({
-	       class=require "actors/sandpuff", sprite=5,
+	       class=require "actors/particle",
+	       sprite=1,
+	       dy=-1,
 	       x=self.x,
 	       y=self.y,
 	 })

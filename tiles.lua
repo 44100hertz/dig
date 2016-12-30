@@ -47,7 +47,9 @@ return {
    destroy = function (x, y)
       tiles[y][x] = false
       local puff = {
-	 class = require "actors/sandpuff",
+	 class = require "actors/particle",
+	 sprite = 0,
+	 dy = -1,
 	 x = x * 16,
 	 y = y * 16,
       }

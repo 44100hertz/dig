@@ -2,9 +2,9 @@ local draw = require "draw"
 
 return {
    init = function (self)
-      self.sprite = self.sprite or 4
+      self.flip = self.flip and true or false
+      self.sprite = self.sprite or 0
       self.timer = 0
-      self.dy = -1
    end,
 
    update = function (self)
@@ -13,7 +13,7 @@ return {
    end,
 
    draw = function (self)
-      local frame = math.floor(self.timer / 5) + 4
-      draw.add(frame, self.sprite, self.x, self.y)
+      local frame = math.floor(self.timer / 5) + 7
+      draw.add(frame, self.sprite, self.x, self.y, 1, 1, self.flip)
    end,
 }

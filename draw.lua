@@ -20,7 +20,7 @@ return {
 	 )
       end
       draw_x, draw_y = math.floor(draw_x), math.floor(draw_y)
-      sb:add(quads[y][x], draw_x, draw_y, 0, flip and -1 or 1)
+      sb:add(quads[y][x], draw_x, draw_y, 0, flip and -1 or 1, 1)
    end,
 
    -- Draw everything in the given sprite batch
