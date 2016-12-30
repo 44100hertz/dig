@@ -25,7 +25,6 @@ return {
 
    -- Draw everything in the given sprite batch
    draw = function (x, y)
-      love.graphics.clear()
       love.graphics.draw(sb, x, y)
       sb:clear()
    end

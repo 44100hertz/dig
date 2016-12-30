@@ -21,13 +21,14 @@ return {
    end,
 
    update = function ()
-      dscroll = scroll < player.y-80 and -2 or 0
+      dscroll = scroll < player.y-85 and -2 or 0
       scroll = scroll - dscroll
       tiles.update(scroll)
       actors.update(scroll)
    end,
 
    draw = function ()
+      love.graphics.clear(25, 25, 25)
       tiles.draw()
       actors.draw()
       draw.draw(0, -scroll)
