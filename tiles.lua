@@ -57,7 +57,6 @@ return {
    -- test collision, assumes 16x16 object with corner at x, y
    -- returns the tile that was collided with
    collide = function (x, y)
-      if y % 16 > 2 then return end
       local tx = math.floor(x/16)
       local ty = math.floor(y/16)
       if tiles[ty] and tiles[ty][tx] then
