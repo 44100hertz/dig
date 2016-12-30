@@ -17,7 +17,7 @@ move = function (self)
    local new_dx =
       bool2num(love.keyboard.isScancodeDown("right")) -
       bool2num(love.keyboard.isScancodeDown("left"))
-   if self.dx > -1 and new_dx == -1 then
+   if self.dx > -1 and new_dx == -1 and self.tileon == 1 then
       actors.add({
 	    class=require "actors/particle",
 	    sprite=2,
@@ -25,7 +25,7 @@ move = function (self)
 	    y=self.y-8,
 	    flip=false,
       })
-   elseif self.dx < 1 and new_dx == 1 then
+   elseif self.dx < 1 and new_dx == 1 and self.tileon == 1 then
       actors.add({
 	    class=require "actors/particle",
 	    sprite=2,
@@ -55,7 +55,7 @@ floor = function (self)
 	    y=self.y-8,
       })
    end
-   if not self.tx then
+   if self.tileon == 0 then
       loadstate(self, air)
       return
    end
@@ -70,7 +70,7 @@ floor = function (self)
 end
 
 air = function (self)
-   if self.y % 16 < 2 and self.tx then
+   if self.y % 16 < 2 and self.tileon > 0 then
       loadstate(self, floor)
       self.dy = 0
       self.y = math.floor(self.y / 16) * 16
@@ -84,9 +84,10 @@ dig = function (self)
    if self.timer < 11 then
       self.frame = dig_anim[self.timer]
    else
-      if self.tx then
-	 tiles.destroy(self.tx, self.ty)
-      else
+      if self.tileon == 1 then
+	 tiles.destroy(math.floor(self.x/16), math.floor(self.y/16))
+	 self.y = self.y + 2
+      elseif self.tileon == 0 then
 	 actors.add({
 	       class=require "actors/particle",
 	       sprite=1,
@@ -95,7 +96,6 @@ dig = function (self)
 	       y=self.y,
 	 })
       end
-      self.y = self.y + 2
       loadstate(self, air)
    end
    move(self)
@@ -109,7 +109,7 @@ return {
    end,
 
    update = function (self)
-      self.tx, self.ty = tiles.collide(self.x, self.y)
+      self.tileon = tiles.collide(self.x, self.y)
       self.timer = self.timer + 1
       self:state()
    end,

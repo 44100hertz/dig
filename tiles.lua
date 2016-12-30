@@ -10,13 +10,34 @@ local actors = require "actors"
 local sand = {}
 local tile_off = 0
 
+local rng = function (num)
+   return math.floor(math.random() * num+1)
+end
+
+local gen_row = function ()
+   local row = {}
+   for i = 0,15 do row[i] = 1 end
+   num_rocks = rng(2)
+   num_gaps = rng(2)
+   for _ = 1,num_rocks do row[rng(15)] = 2 end
+   for _ = 1,num_gaps do row[rng(15)] = 0 end
+   return row
+end
+
+local draw_tile = function(x, y)
+   if sand[y][x] == 1 then
+      draw.add(x%2, y%2, x*16, y*16)
+   elseif sand[y][x] == 0 then
+      draw.add(x%2+2, y%2, x*16, y*16)
+   elseif sand[y][x] == 2 then
+      draw.add(4, 2, x*16, y*16)
+   end
+end
+
 return {
    init = function ()
       for y = 0,15 do
-	 sand[y] = {}
-	 for x = 0,15 do
-	    sand[y][x] = true
-	 end
+	 sand[y] = gen_row()
       end
    end,
 
@@ -26,26 +47,23 @@ return {
       -- If sand are offscreen, generate more
       if not sand[maxoff] then
 	 sand[tile_off-1] = nil
-	 sand[maxoff] = {}
-	 for x = 0,15 do
-	    sand[maxoff][x] = true -- TODO: proper tile generation
-	 end
+	 sand[maxoff] = gen_row()
       end
    end,
 
    draw = function ()
       -- Draw 11 rows of sand; max possible visible
       for y = tile_off,tile_off+11 do
-	 if sand[y] then for x = 0,15 do
-	       local tilex = x % 2 + (sand[y][x] and 0 or 2)
-	       local tiley = y % 2-- TODO: depth randomization
-	       draw.add(tilex, tiley, x*16, y*16)
-       	 end end
+	 if sand[y] then
+	    for x = 0,15 do
+	       draw_tile(x, y)
+	    end
+	 end
       end
    end,
 
    destroy = function (x, y)
-      sand[y][x] = false
+      sand[y][x] = 0
       local puff = {
 	 class = require "actors/particle",
 	 sprite = 0,
@@ -61,8 +79,6 @@ return {
    collide = function (x, y)
       local tx = math.floor(x/16)
       local ty = math.floor(y/16)
-      if sand[ty] and sand[ty][tx] then
-	 return tx, ty
-      end
+      return sand[ty] and sand[ty][tx] or 0
    end
 }
