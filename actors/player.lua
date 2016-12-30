@@ -13,10 +13,20 @@ end
 
 local jump, floor, air, dig
 
+-- General function for movement
 move = function (self)
+   -- Set a sort of goal position
    local new_dx =
       bool2num(love.keyboard.isScancodeDown("right")) -
       bool2num(love.keyboard.isScancodeDown("left"))
+
+   -- Do not allow collisions with rocks
+   if tiles.collide(self.x + new_dx, self.y-1)>1 then
+      self.dx = 0
+      return
+   end
+
+   -- Spawn movement particles
    if self.dx > -1 and new_dx == -1 and self.tileon == 1 then
       actors.add({
 	    class=require "actors/particle",
@@ -34,9 +44,11 @@ move = function (self)
 	    flip=true,
       })
    end
+
    self.dx = new_dx
 end
 
+-- Lag state before a jump
 jump = function (self)
    self.dx = self.dx / 2
    if self.timer == 4 then
@@ -46,8 +58,11 @@ jump = function (self)
    end
 end
 
+-- Grounded
 floor = function (self)
+   -- Hitting ground animation
    if self.timer == 1 then
+      self.dx = 0
       actors.add({
 	    class=require "actors/particle",
 	    sprite=1,
@@ -55,12 +70,18 @@ floor = function (self)
 	    y=self.y-8,
       })
    end
+
+   -- If not actually grounded, enter air state
    if self.tileon == 0 then
       loadstate(self, air)
       return
    end
+
+   -- User input
    if self.timer > 4 then
       move(self)
+   end
+   if self.timer > 8 then
       if love.keyboard.isScancodeDown("x") then
 	 loadstate(self, dig)
       elseif love.keyboard.isScancodeDown("z") then
@@ -69,9 +90,11 @@ floor = function (self)
    end
 end
 
+-- In-air falling state
 air = function (self)
-   if self.y % 16 < 2 and self.tileon > 0 then
-      -- If collided with ground
+   local rockabove = (tiles.collide(self.x, self.y-16)>1)
+   if self.y % 16 < 2 and self.tileon > 0 and not rockabove then
+      -- If on potential ledge top not below a rock, land
       loadstate(self, floor)
       self.dy = 0
       self.y = math.floor(self.y / 16) * 16
@@ -81,6 +104,7 @@ air = function (self)
    end
 end
 
+-- Attempt to dig a tile below
 local dig_anim = {1,2,3,3,4,5,6,7,8,0}
 dig = function (self)
    if self.timer < 11 then
