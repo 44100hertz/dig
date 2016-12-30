@@ -8,6 +8,8 @@ return {
    update = function (scroll)
       for k,v in ipairs(actors) do
 	 v.class.update(v, scroll)
+	 if v.dx then v.x = v.x + v.dx end
+	 if v.dy then v.y = v.y + v.dy end
       end
    end,
 

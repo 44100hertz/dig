@@ -3,12 +3,11 @@ local draw = require "draw"
 return {
    init = function (self)
       self.timer = 0
+      self.dy = -1
    end,
 
    update = function (self)
       self.timer = self.timer + 1
-      self.dy = -1
-      self.y = self.y + self.dy
       if self.timer >= 15 then self.die = true end
    end,
 
