@@ -1,4 +1,5 @@
 local draw = require "draw"
+local actors = require "actors"
 
 -- 15x10 onscreen tiles
 -- 15x15 tiles loaded onscreen; 5 above you
@@ -39,5 +40,15 @@ return {
 	       draw.add(tilex, tiley, x*16, y*16)
        	 end end
       end
+   end,
+
+   destroy = function (x, y)
+      tiles[y][x] = false
+      local puff = {
+	 class = require "actors/sandpuff",
+	 x = x * 16,
+	 y = y * 16,
+      }
+      actors.add(puff)
    end
 }
