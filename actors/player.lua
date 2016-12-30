@@ -29,21 +29,30 @@ jump = function (self)
 end
 
 floor = function (self)
+   if self.timer == 1 then
+      actors.add({
+	    class=require "actors/sandpuff", sprite=5,
+	    x=self.x-8,
+	    y=self.y,
+      })
+   end
    if not self.tx then
       loadstate(self, air)
       return
    end
-   move(self)
-   if love.keyboard.isScancodeDown("x") then
-      loadstate(self, dig)
-   elseif love.keyboard.isScancodeDown("z") then
-      loadstate(self, jump)
+   if self.timer > 4 then
+      move(self)
+      if love.keyboard.isScancodeDown("x") then
+	 loadstate(self, dig)
+      elseif love.keyboard.isScancodeDown("z") then
+	 loadstate(self, jump)
+      end
    end
 end
 
 air = function (self)
    if self.y % 16 < 2 and self.tx then
-      self.state = floor
+      loadstate(self, floor)
       self.dy = 0
       self.y = math.floor(self.y / 16) * 16
    else
@@ -66,8 +75,9 @@ dig = function (self)
 	 })
       end
       self.y = self.y + 2
-      loadstate(self, floor)
+      loadstate(self, air)
    end
+   move(self)
 end
 
 return {
