@@ -11,7 +11,7 @@ local sand = {}
 local tile_off = 0
 
 local rng = function (num)
-   return math.floor(math.random() * num+1)
+   return math.floor(love.math.random() * num+1)
 end
 
 local gen_row = function (row)
