@@ -11,6 +11,7 @@ return {
 	 if v.dx then v.x = v.x + v.dx end
 	 if v.dy then v.y = v.y + v.dy end
 	 v.x = v.x % 240
+	 if v.timer then v.timer = v.timer + 1 end
       end
    end,
 

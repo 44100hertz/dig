@@ -8,7 +8,6 @@ return {
    end,
 
    update = function (self)
-      self.timer = self.timer + 1
       if self.timer >= 15 then self.die = true end
    end,
 

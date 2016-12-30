@@ -71,10 +71,12 @@ end
 
 air = function (self)
    if self.y % 16 < 2 and self.tileon > 0 then
+      -- If collided with ground
       loadstate(self, floor)
       self.dy = 0
       self.y = math.floor(self.y / 16) * 16
    else
+      -- If still in air
       self.dy = math.min(self.dy + 1/4, 2)
    end
 end
@@ -110,7 +112,6 @@ return {
 
    update = function (self)
       self.tileon = tiles.collide(self.x, self.y)
-      self.timer = self.timer + 1
       self:state()
    end,
 
