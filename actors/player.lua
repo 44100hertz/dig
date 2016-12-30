@@ -93,8 +93,10 @@ end
 -- In-air falling state
 air = function (self)
    local rockabove = (tiles.collide(self.x, self.y-16)>1)
-   if self.y % 16 < 2 and self.tileon > 0 and not rockabove then
-      -- If on potential ledge top not below a rock, land
+   if self.y % 16 < 2 and self.tileon > 0 and not rockabove
+      and self.dy > 0
+   then
+      -- If on potential ledge top not below a rock, and falling, land
       loadstate(self, floor)
       self.dy = 0
       self.y = math.floor(self.y / 16) * 16
