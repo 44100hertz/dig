@@ -19,6 +19,7 @@ return {
 	    assets_width, assets_height
 	 )
       end
+      draw_x, draw_y = math.floor(draw_x), math.floor(draw_y)
       sb:add(quads[y][x], draw_x, draw_y, 0, flip and -1 or 1)
    end,
 

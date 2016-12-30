@@ -9,11 +9,23 @@ return {
    end,
 
    update = function (self)
-      if tiles.collide(self.x, self.y) then
+      local tx, ty = tiles.collide(self.x, self.y)
+      if tx then
 	 self.dy = 0
+	 self.y = math.floor(self.y / 16) * 16
+	 if love.keyboard.isScancodeDown("x") then
+	    tiles.destroy(tx, ty)
+	 elseif love.keyboard.isScancodeDown("z") then
+	    self.dy = -2
+	 end
       else
-	 self.dy = self.dy > 2 and self.dy + 1/8 or 2
+	 self.dy = math.min(self.dy + 1/8, 2)
       end
+
+      local bool2num = function (bool) return bool and 1 or 0 end
+      self.dx =
+	 bool2num(love.keyboard.isScancodeDown("right")) -
+	 bool2num(love.keyboard.isScancodeDown("left"))
    end,
 
    draw = function (self)
