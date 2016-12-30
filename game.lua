@@ -1,26 +1,22 @@
 local draw = require "draw"
+local tiles = require "tiles"
 
 -- 15x10 onscreen tiles
 -- 15x15 tiles loaded onscreen; 5 above you
 -- tile_off says where to start, moves up with the game
 -- for each tile, true = sand, false = none
-local tiles = {}
-local tile_off = 0
 
 local actors = {}
+local player
 
 local scroll = -120
+local dscroll
 
 return {
    init = function ()
-      for y = 0,15 do
-	 tiles[y] = {}
-	 for x = 0,15 do
-	    tiles[y][x] = true
-	 end
-      end
+      tiles.init()
 
-      local player = {
+      player = {
 	 class = require "actors/player",
 	 x = 120,
 	 y = -60,
@@ -30,16 +26,10 @@ return {
    end,
 
    update = function ()
-      tile_off = math.floor(scroll / 16)
-      local maxoff = tile_off+15
-      -- If tiles are offscreen, generate more
-      if not tiles[maxoff] then
-	 tiles[tile_off-1] = nil
-	 tiles[maxoff] = {}
-	 for x = 0,15 do
-	    tiles[maxoff][x] = true -- TODO: proper tile generation
-	 end
-      end
+      dscroll = scroll < player.y-80 and -1 or 0
+      scroll = scroll - dscroll
+
+      tiles.update(scroll)
 
       for k,v in ipairs(actors) do
 	 if v.class.update then v.class.update(v) end
@@ -47,18 +37,12 @@ return {
    end,
 
    draw = function ()
-      -- Draw 11 rows of tiles; max possible visible
-      for y = tile_off,tile_off+11 do
-	 if tiles[y] then for x = 0,15 do
-	    local tilex = x % 2 + (tiles[y][x] and 0 or 2)
-       	    local tiley = y % 2-- TODO: depth randomization
-       	    draw.add(tilex, tiley, x*16, y*16)
-       	 end end
-      end
+      tiles.draw()
 
       for k,v in ipairs(actors) do
 	 if v.class.draw then v.class.draw(v) end
       end
+
       draw.draw(0, -scroll)
    end,
 }
