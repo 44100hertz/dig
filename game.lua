@@ -4,11 +4,12 @@ local actors = require "actors"
 
 local player
 
-local scroll = -120
+local scroll
 local dscroll
 
 return {
    init = function ()
+      scroll = -120
       tiles.init()
       actors.init()
       player = {
