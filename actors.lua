@@ -10,6 +10,7 @@ return {
 	 v.class.update(v, scroll)
 	 if v.dx then v.x = v.x + v.dx end
 	 if v.dy then v.y = v.y + v.dy end
+	 v.x = v.x % 240
       end
    end,
 
