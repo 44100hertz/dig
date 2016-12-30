@@ -1,5 +1,9 @@
 local draw = require "draw"
 
+-- 15x10 onscreen tiles
+-- 15x15 tiles loaded onscreen; 5 above you
+-- tile_off says where to start, moves up with the game
+-- for each tile, true = sand, false = none
 local tiles = {}
 local tile_off = 0
 
