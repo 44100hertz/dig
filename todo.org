@@ -1,0 +1,5 @@
+** TODO parallax BG
+** TODO HUD
+** TODO Menus
+** TODO proper player animation
+** TODO proper general actor fn's
