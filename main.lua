@@ -1,3 +1,5 @@
+love.filesystem.setRequirePath("src/?.lua")
+
 local state = require "state"
 local game = require "game"
 
