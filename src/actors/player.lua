@@ -50,6 +50,8 @@ end
 
 -- Lag state before a jump
 jump = function (self)
+   self.frame_x = 2
+   self.frame_y = 6
    if self.timer == 4 then
       move(self)
       self.dy = -3
@@ -77,11 +79,18 @@ floor = function (self)
 
    -- User input
    move(self)
+
+   if self.dx < 0 then self.frame_x = math.floor(self.timer*0.5 % 4)
+   elseif self.dx > 0 then self.frame_x = math.floor(-self.timer*0.5 % 4)
+   else self.frame_x = 0
+   end
+   self.frame_y = 6
+
    if self.timer > 8 then
       if love.keyboard.isScancodeDown("x") then
-	 loadstate(self, dig)
+         loadstate(self, dig)
       elseif love.keyboard.isScancodeDown("z") then
-	 loadstate(self, jump)
+         loadstate(self, jump)
       end
    end
 end
@@ -106,24 +115,31 @@ air = function (self)
 end
 
 -- Attempt to dig a tile below
-local dig_anim = {1,2,3,3,4,5,6,7,8,0}
+local dig_anim = {0,0,1,2,3,3,3,4,5,5,5,6,7,0}
 dig = function (self)
-   if self.timer < 11 then
-      self.frame = dig_anim[self.timer]
+   if self.timer < 15 then
+      self.frame_x = dig_anim[self.timer]
+      self.frame_y = 8
    else
-      if self.tileon == 1 then
-	 tiles.destroy(math.floor(self.x/16), math.floor(self.y/16))
-	 self.y = self.y + 2
-      elseif self.tileon == 0 then
-	 actors.add({
-	       class=require "actors/particle",
-	       sprite=1,
-	       dy=-1,
-	       x=self.x,
-	       y=self.y,
-	 })
+      if self.tileon == 0 then
+         loadstate(self, air)
+         self.y = self.y + 2
+      else
+         loadstate(self, floor)
       end
-      loadstate(self, air)
+   end
+   if self.timer == 10 then
+      if self.tileon == 1 then
+         tiles.destroy(math.floor(self.x/16), math.floor(self.y/16))
+      else
+         -- actors.add({
+         --       class=require "actors/particle",
+         --       sprite=1,
+         --       dy=-1,
+         --       x=self.x-8,
+         --       y=self.y,
+         -- })
+      end
    end
    move(self)
 end
@@ -132,7 +148,8 @@ return {
    init = function (self)
       self.dx, self.dy = 0,0
       loadstate(self, air)
-      self.frame = 0
+      self.frame_x = 0
+      self.frame_y = 6
    end,
 
    update = function (self)
@@ -141,6 +158,6 @@ return {
    end,
 
    draw = function (self)
-      draw.add(self.frame, 6, self.x - origin_x, self.y - origin_y, 1, 2)
+      draw.add(self.frame_x, self.frame_y, self.x - origin_x, self.y - origin_y, 1, 2)
    end
 }
