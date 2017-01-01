@@ -50,8 +50,6 @@ end
 
 -- Lag state before a jump
 jump = function (self)
-   self.frame_x = 2
-   self.frame_y = 6
    if self.timer == 4 then
       move(self)
       self.dy = -3
@@ -63,6 +61,7 @@ end
 floor = function (self)
    -- Hitting ground animation
    if self.timer == 1 then
+      self.y = math.floor(self.y * (1/16)) * 16
       actors.add({
 	    class=require "actors/particle",
 	    sprite=1,
@@ -97,6 +96,8 @@ end
 
 -- In-air falling state
 air = function (self)
+   self.frame_x = 2
+   self.frame_y = 6
    move(self)
    if tiles.collide(self.x, self.y-8)>1 and self.dy < 0 then
       self.dy = -self.dy
@@ -111,9 +112,9 @@ air = function (self)
       tiles.collide(self.x, self.y-16)<2 and self.dy > 0
    then
       -- If on potential ledge top not below a rock, and falling, land
-      loadstate(self, floor)
       self.dx = 0
       self.dy = 0
+      loadstate(self, floor)
       self.y = math.floor(self.y / 16) * 16
    else
       -- If still in air
