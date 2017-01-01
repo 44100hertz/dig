@@ -19,29 +19,29 @@ local binom_rng = function (num)
    for _ = 1,8 do
       sum = sum + math.random()
    end
-   return math.floor((sum * num * (1/8)))
+   return math.floor(sum * num * (1/8))
 end
 
-local gen_row = function (row)
+local gen_row = function (row, scroll)
    sand[row] = {}
    for i = 0,15 do sand[row][i] = 1 end
-   num_rocks = binom_rng(2)
-   num_gaps = binom_rng(2)
+   num_rocks = binom_rng(scroll * (1/256) + 1)
+   num_gaps = binom_rng(scroll * (1/256) + 2)
    for _ = 1,num_rocks do sand[row][rng(15)] = 2 end
    for _ = 1,num_gaps do sand[row][rng(15)] = 0 end
 
    -- Sometimes make big rocks
-   if math.random() < 0.5 and row > 10 then
+   if binom_rng(scroll / 100) > 10 then
       local br_x = rng(14)+1 -- Find a valid x pos
       if sand[row][br_x] < 2 -- Check if usable spaces
-	 and sand[row][br_x-1] < 2
-	 and sand[row-1][br_x] < 2
-	 and sand[row-1][br_x-1] < 2
+         and sand[row][br_x-1] < 2
+         and sand[row-1][br_x] < 2
+         and sand[row-1][br_x-1] < 2
       then
-	 sand[row-1][br_x-1] = 9
-	 sand[row-1][br_x] = 10
-	 sand[row][br_x-1] = 11
-	 sand[row][br_x] = 12
+         sand[row-1][br_x-1] = 9
+         sand[row-1][br_x] = 10
+         sand[row][br_x-1] = 11
+         sand[row][br_x] = 12
       end
    end
 end
@@ -64,7 +64,7 @@ end
 
 return {
    init = function ()
-      for y = 0,15 do gen_row(y) end
+      for y = 0,15 do gen_row(y, 0) end
    end,
 
    update = function (scroll)
@@ -72,30 +72,30 @@ return {
       local maxoff = tile_off+15
       -- If sand are offscreen, generate more
       if not sand[maxoff] then
-	 sand[tile_off-1] = nil
-	 gen_row(maxoff)
+         sand[tile_off-1] = nil
+         gen_row(maxoff, scroll)
       end
    end,
 
    draw = function ()
       -- Draw 11 rows of sand; max possible visible
       for y = tile_off,tile_off+11 do
-	 if sand[y] then
-	    for x = 0,15 do
-	       draw_tile(x, y)
-	    end
-	 end
+         if sand[y] then
+            for x = 0,15 do
+               draw_tile(x, y)
+            end
+         end
       end
    end,
 
    destroy = function (x, y)
       sand[y][x] = 0
       local puff = {
-	 class = require "actors/particle",
-	 sprite = 0,
-	 dy = -1,
-	 x = x * 16,
-	 y = y * 16,
+         class = require "actors/particle",
+         sprite = 0,
+         dy = -1,
+         x = x * 16,
+         y = y * 16,
       }
       actors.add(puff)
    end,
