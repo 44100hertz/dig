@@ -31,7 +31,7 @@ move = function (self)
       actors.add({
 	    class=require "actors/particle",
 	    sprite=2,
-	    x=self.x,
+	    x=self.x+4,
 	    y=self.y-8,
 	    flip=false,
       })
@@ -39,7 +39,7 @@ move = function (self)
       actors.add({
 	    class=require "actors/particle",
 	    sprite=2,
-	    x=self.x,
+	    x=self.x-4,
 	    y=self.y-8,
 	    flip=true,
       })
@@ -139,17 +139,9 @@ dig = function (self)
          loadstate(self, floor)
       end
    end
-   if self.timer == 10 then
+   if self.timer == 9 then
       if self.tileon == 1 then
          tiles.destroy(math.floor(self.x/16), math.floor(self.y/16))
-      else
-         -- actors.add({
-         --       class=require "actors/particle",
-         --       sprite=1,
-         --       dy=-1,
-         --       x=self.x-8,
-         --       y=self.y,
-         -- })
       end
    end
    self.dx = 0

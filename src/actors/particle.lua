@@ -8,7 +8,7 @@ return {
    end,
 
    update = function (self)
-      if self.timer >= 15 then self.die = true end
+      if self.timer == 13 then self.die = true end
    end,
 
    draw = function (self)
