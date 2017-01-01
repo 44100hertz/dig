@@ -31,7 +31,7 @@ move = function (self)
       actors.add({
 	    class=require "actors/particle",
 	    sprite=2,
-	    x=self.x-4,
+	    x=self.x,
 	    y=self.y-8,
 	    flip=false,
       })
@@ -39,7 +39,7 @@ move = function (self)
       actors.add({
 	    class=require "actors/particle",
 	    sprite=2,
-	    x=self.x+4,
+	    x=self.x,
 	    y=self.y-8,
 	    flip=true,
       })
@@ -100,12 +100,19 @@ air = function (self)
    move(self)
    if tiles.collide(self.x, self.y-8)>1 and self.dy < 0 then
       self.dy = -self.dy
+      actors.add({
+	    class=require "actors/particle",
+	    sprite=3,
+	    x=self.x-8,
+	    y=self.y-8,
+      })
    end
    if self.y % 16 < 2 and self.tileon > 0 and
       tiles.collide(self.x, self.y-16)<2 and self.dy > 0
    then
       -- If on potential ledge top not below a rock, and falling, land
       loadstate(self, floor)
+      self.dx = 0
       self.dy = 0
       self.y = math.floor(self.y / 16) * 16
    else
