@@ -27,5 +27,8 @@ return {
    draw = function (x, y)
       love.graphics.draw(sb, x, y)
       sb:clear()
-   end
+   end,
+
+   img = assets_img, -- Avoid using these directly
+   sb = sb,
 }
