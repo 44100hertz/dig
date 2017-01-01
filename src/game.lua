@@ -24,7 +24,7 @@ return {
       player = {
          class = require "actors/player",
          x = 120,
-         y = -300,
+         y = -200,
       }
       actors.add(player)
    end,
