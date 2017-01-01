@@ -30,7 +30,7 @@ return {
    end,
 
    update = function ()
-      dscroll = scroll < player.y-85 and -1 or 0
+      dscroll = (scroll < player.y-85 or scroll % 16 > 0) and -1 or 0
       scroll = scroll - dscroll
       tiles.update(scroll)
       actors.update(scroll)

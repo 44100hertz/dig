@@ -50,6 +50,7 @@ end
 
 -- Lag state before a jump
 jump = function (self)
+   self.dx = 0
    if self.timer == 4 then
       move(self)
       self.dy = -3
@@ -62,12 +63,14 @@ floor = function (self)
    -- Hitting ground animation
    if self.timer == 1 then
       self.y = math.floor(self.y * (1/16)) * 16
-      actors.add({
-	    class=require "actors/particle",
-	    sprite=1,
-	    x=self.x-8,
-	    y=self.y-8,
-      })
+      if self.tileon == 1 then
+         actors.add({
+               class=require "actors/particle",
+               sprite=1,
+               x=self.x-8,
+               y=self.y-8,
+         })
+      end
    end
 
    -- If not actually grounded, enter air state
@@ -123,7 +126,7 @@ air = function (self)
 end
 
 -- Attempt to dig a tile below
-local dig_anim = {0,0,1,2,3,3,3,4,5,5,5,6,7,0}
+local dig_anim = {0,0,1,2,3,3,3,4,5,5,5,6,7,8,0}
 dig = function (self)
    if self.timer < 15 then
       self.frame_x = dig_anim[self.timer]
