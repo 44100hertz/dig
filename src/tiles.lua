@@ -50,15 +50,15 @@ local draw_tile = function(x, y)
    if sand[y][x] == 1 then -- Sand
       draw.add(x%2, y%2, x*16, y*16)
    elseif sand[y][x] == 2 then -- Rock
-      draw.add(4, 2, x*16, y*16)
+      draw.add(4, 0, x*16, y*16)
    elseif sand[y][x] == 9 then -- Big rock cases
-      draw.add(5, 2, x*16, y*16)
+      draw.add(5, 0, x*16, y*16)
    elseif sand[y][x] == 10 then -- Big rock cases
-      draw.add(6, 2, x*16, y*16)
+      draw.add(6, 0, x*16, y*16)
    elseif sand[y][x] == 11 then -- Big rock cases
-      draw.add(5, 3, x*16, y*16)
+      draw.add(5, 1, x*16, y*16)
    elseif sand[y][x] == 12 then -- Big rock cases
-      draw.add(6, 3, x*16, y*16)
+      draw.add(6, 1, x*16, y*16)
    end
 end
 
