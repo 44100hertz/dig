@@ -11,14 +11,22 @@ local sand = {}
 local tile_off = 0
 
 local rng = function (num)
-   return math.floor(love.math.random() * num+1)
+   return math.floor(love.math.random() * num+1) - 1
+end
+
+local binom_rng = function (num)
+   local sum = 0
+   for _ = 1,8 do
+      sum = sum + math.random()
+   end
+   return math.floor((sum * num * (1/8)))
 end
 
 local gen_row = function (row)
    sand[row] = {}
    for i = 0,15 do sand[row][i] = 1 end
-   num_rocks = rng(2)
-   num_gaps = rng(2)
+   num_rocks = binom_rng(2)
+   num_gaps = binom_rng(2)
    for _ = 1,num_rocks do sand[row][rng(15)] = 2 end
    for _ = 1,num_gaps do sand[row][rng(15)] = 0 end
 
