@@ -99,7 +99,7 @@ end
 
 -- In-air falling state
 air = function (self)
-   self.frame_x = 2
+   self.frame_x = 4 + math.floor(self.timer % 12)
    self.frame_y = 6
    move(self)
    if tiles.collide(self.x, self.y-8)>1 and self.dy < 0 then
