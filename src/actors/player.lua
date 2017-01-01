@@ -50,7 +50,6 @@ end
 
 -- Lag state before a jump
 jump = function (self)
-   self.dx = self.dx / 2
    if self.timer == 4 then
       move(self)
       self.dy = -3
@@ -62,7 +61,6 @@ end
 floor = function (self)
    -- Hitting ground animation
    if self.timer == 1 then
-      self.dx = 0
       actors.add({
 	    class=require "actors/particle",
 	    sprite=1,
@@ -78,9 +76,7 @@ floor = function (self)
    end
 
    -- User input
-   if self.timer > 4 then
-      move(self)
-   end
+   move(self)
    if self.timer > 8 then
       if love.keyboard.isScancodeDown("x") then
 	 loadstate(self, dig)
@@ -93,9 +89,11 @@ end
 -- In-air falling state
 air = function (self)
    move(self)
-   local rockabove = (tiles.collide(self.x, self.y-16)>1)
-   if self.y % 16 < 2 and self.tileon > 0 and not rockabove
-      and self.dy > 0
+   if tiles.collide(self.x, self.y-8)>1 and self.dy < 0 then
+      self.dy = -self.dy
+   end
+   if self.y % 16 < 2 and self.tileon > 0 and
+      tiles.collide(self.x, self.y-16)<2 and self.dy > 0
    then
       -- If on potential ledge top not below a rock, and falling, land
       loadstate(self, floor)
