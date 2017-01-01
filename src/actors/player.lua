@@ -152,7 +152,7 @@ dig = function (self)
          -- })
       end
    end
-   move(self)
+   self.dx = 0
 end
 
 return {
