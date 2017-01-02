@@ -1,6 +1,7 @@
 local draw = require "draw"
 local tiles = require "tiles"
 local actors = require "actors"
+local sound = require "sound"
 
 local origin_x, origin_y = 8, 16
 
@@ -64,6 +65,7 @@ floor = function (self)
    -- Hitting ground animation
    if self.timer == 1 then
       self.y = math.floor(self.y * (1/16)) * 16
+      sound.play("land")
       if self.tileon == 1 then
          actors.add({
                class=require "actors/particle",
@@ -92,6 +94,7 @@ floor = function (self)
 
    if self.timer > 8 then
       if love.keyboard.isScancodeDown("x") then
+         sound.play("dig1")
          loadstate(self, dig)
       elseif love.keyboard.isScancodeDown("z") then
          loadstate(self, jump)
@@ -144,6 +147,7 @@ dig = function (self)
    end
    if self.timer == 9 then
       if self.tileon == 1 then
+         sound.play("dig2")
          tiles.destroy(math.floor(self.x/16), math.floor(self.y/16))
       end
    end
