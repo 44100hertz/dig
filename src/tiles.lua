@@ -27,11 +27,11 @@ local gen_row = function (row, scroll)
    for i = 0,15 do sand[row][i] = 1 end
 
    -- Rocks, 2
-   num_rocks = binom_rng(math.min(scroll*(1/256)+1, 5))
+   local num_rocks = binom_rng(math.min(scroll*(1/256)+1, 5))
    for _ = 1,num_rocks do sand[row][rng(15)] = 2 end
 
    -- Gaps, 0
-   num_gaps = binom_rng(math.min(scroll*(1/256)+2, 5))
+   local num_gaps = binom_rng(math.min(scroll*(1/256)+2, 5))
    for _ = 1,num_gaps do sand[row][rng(15)] = 0 end
 
    -- Sometimes make big rocks, 9 10 11 12
@@ -54,10 +54,11 @@ local gen_row = function (row, scroll)
    if math.random() < 1/8 and sand[row] and sand[row][gem_x]==1 then
       actors.add({
             class=require "actors/gem",
-            x=gem_x*16,
-            y=row*16,
+            x=gem_x*16, y=row*16,
       })
    end
+
+   actors.add({class=require "actors/ghost", y=row*16})
 end
 
 local draw_tile = function(x, y)

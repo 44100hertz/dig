@@ -17,8 +17,8 @@ return {
                                                draw.img:getDimensions())
             love.graphics.draw(draw.img, quad)
       end)
-      
       bg_quad = love.graphics.newQuad(0, 0, 240, 160+32, 32, 32)
+
       scroll = -120
       actors.init()
       tiles.init()
