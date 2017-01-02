@@ -1,6 +1,7 @@
 local draw = require "draw"
 local tiles = require "tiles"
 local actors = require "actors"
+local status = require "status"
 
 local player
 
@@ -41,6 +42,7 @@ return {
       love.graphics.draw(bg_canvas, bg_quad, 0, math.floor(-scroll * 0.5) % 32 - 32)
       tiles.draw()      
       actors.draw()
+      status.draw(math.floor(scroll / 16)+5, 10, 0, 5, scroll + 5)
       draw.draw(0, -scroll)
    end,
 }
