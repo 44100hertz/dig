@@ -54,6 +54,7 @@ jump = function (self)
    if self.timer == 4 then
       move(self)
       self.dy = -3
+      self.spin_speed = 0.5
       loadstate(self, air)
    end
 end
@@ -75,6 +76,7 @@ floor = function (self)
 
    -- If not actually grounded, enter air state
    if self.tileon == 0 then
+      self.spin_speed = 1
       loadstate(self, air)
       return
    end
@@ -99,7 +101,7 @@ end
 
 -- In-air falling state
 air = function (self)
-   self.frame_x = 4 + math.floor(self.timer % 12)
+   self.frame_x = 4 + math.floor(self.timer * self.spin_speed % 12)
    self.frame_y = 6
    move(self)
    if tiles.collide(self.x, self.y-8)>1 and self.dy < 0 then
@@ -133,6 +135,7 @@ dig = function (self)
       self.frame_y = 8
    else
       if self.tileon == 0 then
+         self.spin_speed = 1
          loadstate(self, air)
          self.y = self.y + 2
       else
@@ -150,6 +153,7 @@ end
 return {
    init = function (self)
       self.dx, self.dy = 0,0
+      self.spin_speed = 1
       loadstate(self, air)
       self.frame_x = 0
       self.frame_y = 6
