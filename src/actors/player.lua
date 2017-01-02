@@ -78,11 +78,11 @@ floor = function (self)
    -- User input
    move(self)
 
-   if self.dx < 0 then self.frame_x = math.floor(self.timer*0.5 % 4)
-   elseif self.dx > 0 then self.frame_x = math.floor(-self.timer*0.5 % 4)
-   else self.frame_x = 0
+   if self.dx < 0 then self.fx = math.floor(self.timer*0.5 % 4)
+   elseif self.dx > 0 then self.fx = math.floor(-self.timer*0.5 % 4)
+   else self.fx = 0
    end
-   self.frame_y = 6
+   self.fy = 6
    self.size_y = 1
 
    if self.timer > 8 then
@@ -97,8 +97,8 @@ end
 
 -- In-air falling state
 air = function (self)
-   self.frame_x = 4 + math.floor(self.timer * self.spin_speed % 12)
-   self.frame_y = 6
+   self.fx = 4 + math.floor(self.timer * self.spin_speed % 12)
+   self.fy = 6
    self.size_y = 1
    move(self)
    if tiles.collide(self.x, self.y-8)>1 and self.dy < 0 then
@@ -126,8 +126,8 @@ end
 dig = function (self)
    local anim = {0,0,1,2,3,3,3,4,5,5,5,6,7,8,0}
    if self.timer < 15 then
-      self.frame_x = anim[self.timer]
-      self.frame_y = 6
+      self.fx = anim[self.timer]
+      self.fy = 6
       self.size_y = 2
    else
       if self.tileon == 0 then
@@ -152,7 +152,7 @@ return {
       self.dx, self.dy = 0,0
       self.spin_speed = 1
       loadstate(self, air)
-      self.frame_x, self.frame_y = 0, 6
+      self.fx, self.fy = 0, 6
       self.size_y = 1
    end,
 
@@ -162,6 +162,6 @@ return {
    end,
 
    draw = function (self)
-      draw.add(self.frame_x, self.frame_y, self.x-8, self.y-12, 1, self.size_y)
+      draw.add(self.fx, self.fy, self.x-8, self.y-12, 1, self.size_y)
    end
 }
