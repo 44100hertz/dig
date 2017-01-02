@@ -3,8 +3,6 @@ local tiles = require "tiles"
 local actors = require "actors"
 local sound = require "sound"
 
-local origin_x, origin_y = 8, 16
-
 local bool2num = function (bool) return bool and 1 or 0 end
 
 local loadstate = function (self, state)
@@ -91,6 +89,7 @@ floor = function (self)
    else self.frame_x = 0
    end
    self.frame_y = 6
+   self.size_y = 1
 
    if self.timer > 8 then
       if love.keyboard.isScancodeDown("x") then
@@ -106,6 +105,7 @@ end
 air = function (self)
    self.frame_x = 4 + math.floor(self.timer * self.spin_speed % 12)
    self.frame_y = 6
+   self.size_y = 1
    move(self)
    if tiles.collide(self.x, self.y-8)>1 and self.dy < 0 then
       self.dy = -self.dy
@@ -135,7 +135,8 @@ local dig_anim = {0,0,1,2,3,3,3,4,5,5,5,6,7,8,0}
 dig = function (self)
    if self.timer < 15 then
       self.frame_x = dig_anim[self.timer]
-      self.frame_y = 8
+      self.frame_y = 7
+      self.size_y = 2
    else
       if self.tileon == 0 then
          self.spin_speed = 1
@@ -161,6 +162,7 @@ return {
       loadstate(self, air)
       self.frame_x = 0
       self.frame_y = 6
+      self.size_y = 1
    end,
 
    update = function (self)
@@ -169,6 +171,6 @@ return {
    end,
 
    draw = function (self)
-      draw.add(self.frame_x, self.frame_y, self.x - origin_x, self.y - origin_y, 1, 2)
+      draw.add(self.frame_x, self.frame_y, self.x-8, self.y-12, 1, self.size_y)
    end
 }
