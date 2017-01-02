@@ -20,8 +20,8 @@ return {
       
       bg_quad = love.graphics.newQuad(0, 0, 240, 160+32, 32, 32)
       scroll = -120
-      tiles.init()
       actors.init()
+      tiles.init()
       player = {
          class = require "actors/player",
          x = 120,

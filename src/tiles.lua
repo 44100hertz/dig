@@ -25,13 +25,17 @@ end
 local gen_row = function (row, scroll)
    sand[row] = {}
    for i = 0,15 do sand[row][i] = 1 end
-   num_rocks = binom_rng(scroll * (1/256) + 1)
-   num_gaps = binom_rng(scroll * (1/256) + 2)
+
+   -- Rocks, 2
+   num_rocks = binom_rng(math.min(scroll*(1/256)+1, 5))
    for _ = 1,num_rocks do sand[row][rng(15)] = 2 end
+
+   -- Gaps, 0
+   num_gaps = binom_rng(math.min(scroll*(1/256)+2, 5))
    for _ = 1,num_gaps do sand[row][rng(15)] = 0 end
 
-   -- Sometimes make big rocks
-   if binom_rng(scroll / 100) > 10 then
+   -- Sometimes make big rocks, 9 10 11 12
+   if binom_rng(math.min(scroll / 128), 18) > 10 then
       local br_x = rng(14)+1 -- Find a valid x pos
       if sand[row][br_x] < 2 -- Check if usable spaces
          and sand[row][br_x-1] < 2
@@ -44,21 +48,34 @@ local gen_row = function (row, scroll)
          sand[row][br_x] = 12
       end
    end
+
+   -- Gems, 3 4 5
+   local gem_x = rng(15)
+   if math.random() < 1/8 and sand[row] and sand[row][gem_x]==1 then
+      local gem = require "actors/gem"
+      actors.add({
+            class=gem,
+            x=gem_x*16,
+            y=row*16,
+      })
+   end
 end
 
 local draw_tile = function(x, y)
-   if sand[y][x] == 1 then -- Sand
-      draw.add(x%2, y%2, x*16, y*16)
-   elseif sand[y][x] == 2 then -- Rock
-      draw.add(4, 0, x*16, y*16)
-   elseif sand[y][x] == 9 then -- Big rock cases
-      draw.add(5, 0, x*16, y*16)
-   elseif sand[y][x] == 10 then -- Big rock cases
-      draw.add(6, 0, x*16, y*16)
-   elseif sand[y][x] == 11 then -- Big rock cases
-      draw.add(5, 1, x*16, y*16)
-   elseif sand[y][x] == 12 then -- Big rock cases
-      draw.add(6, 1, x*16, y*16)
+   local s = sand[y][x]
+   local tx, ty = x*16, y*16
+   if s == 1 then -- Sand
+      draw.add(x%2, y%2, tx, ty)
+   elseif s == 2 then -- Rock
+      draw.add(4, 0, tx, ty)
+   elseif s == 9 then -- Big rock
+      draw.add(5, 0, tx, ty)
+   elseif s == 10 then
+      draw.add(6, 0, tx, ty)
+   elseif s == 11 then
+      draw.add(5, 1, tx, ty)
+   elseif s == 12 then
+      draw.add(6, 1, tx, ty)
    end
 end
 
