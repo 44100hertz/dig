@@ -56,6 +56,8 @@ end
 floor = function (self)
    -- Hitting ground animation
    if self.timer == 1 then
+      self.dx = 0
+      self.dy = 0
       self.y = math.floor(self.y * (1/16)) * 16
       sound.play("land")
       if self.tileon == 1 then
@@ -76,11 +78,11 @@ floor = function (self)
    -- User input
    move(self)
 
-   if self.dx < 0 then self.frame[1] = math.floor(self.timer*0.5 % 4)
-   elseif self.dx > 0 then self.frame[1] = math.floor(-self.timer*0.5 % 4)
-   else self.frame[1] = 0
+   if self.dx < 0 then self.frame_x = math.floor(self.timer*0.5 % 4)
+   elseif self.dx > 0 then self.frame_x = math.floor(-self.timer*0.5 % 4)
+   else self.frame_x = 0
    end
-   self.frame[2] = 6
+   self.frame_y = 6
    self.size_y = 1
 
    if self.timer > 8 then
@@ -95,8 +97,8 @@ end
 
 -- In-air falling state
 air = function (self)
-   self.frame[1] = 4 + math.floor(self.timer * self.spin_speed % 12)
-   self.frame[2] = 6
+   self.frame_x = 4 + math.floor(self.timer * self.spin_speed % 12)
+   self.frame_y = 6
    self.size_y = 1
    move(self)
    if tiles.collide(self.x, self.y-8)>1 and self.dy < 0 then
@@ -112,8 +114,6 @@ air = function (self)
       tiles.collide(self.x, self.y-16)<2 and self.dy > 0
    then
       -- If on potential ledge top not below a rock, and falling, land
-      self.dx = 0
-      self.dy = 0
       loadstate(self, floor)
       self.y = math.floor(self.y / 16) * 16
    else
@@ -126,7 +126,8 @@ end
 dig = function (self)
    local anim = {0,0,1,2,3,3,3,4,5,5,5,6,7,8,0}
    if self.timer < 15 then
-      self.frame = {anim[self.timer], 7}
+      self.frame_x = anim[self.timer]
+      self.frame_y = 6
       self.size_y = 2
    else
       if self.tileon == 0 then
@@ -151,7 +152,7 @@ return {
       self.dx, self.dy = 0,0
       self.spin_speed = 1
       loadstate(self, air)
-      self.frame = {0,6}
+      self.frame_x, self.frame_y = 0, 6
       self.size_y = 1
    end,
 
@@ -161,6 +162,6 @@ return {
    end,
 
    draw = function (self)
-      draw.add(self.frame[1], self.frame[2], self.x-8, self.y-12, 1, self.size_y)
+      draw.add(self.frame_x, self.frame_y, self.x-8, self.y-12, 1, self.size_y)
    end
 }
