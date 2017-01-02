@@ -36,25 +36,24 @@ local gen_row = function (row, scroll)
 
    -- Sometimes make big rocks, 9 10 11 12
    if binom_rng(math.min(scroll / 128), 18) > 10 then
-      local br_x = rng(14)+1 -- Find a valid x pos
-      if sand[row][br_x] < 2 -- Check if usable spaces
-         and sand[row][br_x-1] < 2
-         and sand[row-1][br_x] < 2
-         and sand[row-1][br_x-1] < 2
+      local x = rng(14)+1 -- Find a valid x pos
+      if sand[row][x] < 2 -- Check if usable spaces
+         and sand[row][x-1] < 2
+         and sand[row-1][x] < 2
+         and sand[row-1][x-1] < 2
       then
-         sand[row-1][br_x-1] = 9
-         sand[row-1][br_x] = 10
-         sand[row][br_x-1] = 11
-         sand[row][br_x] = 12
+         sand[row-1][x-1] = 9
+         sand[row-1][x] = 10
+         sand[row][x-1] = 11
+         sand[row][x] = 12
       end
    end
 
    -- Gems, 3 4 5
    local gem_x = rng(15)
    if math.random() < 1/8 and sand[row] and sand[row][gem_x]==1 then
-      local gem = require "actors/gem"
       actors.add({
-            class=gem,
+            class=require "actors/gem",
             x=gem_x*16,
             y=row*16,
       })
@@ -106,15 +105,14 @@ return {
    end,
 
    destroy = function (x, y)
+      x = math.floor(x / 16)
+      y = math.floor(y / 16)
       sand[y][x] = 0
-      local puff = {
-         class = require "actors/particle",
-         sprite = 0,
+      actors.add({
+         class = require "actors/particle", sprite = 0,
          dy = -1,
-         x = x * 16,
-         y = y * 16,
-      }
-      actors.add(puff)
+         x=x*16, y=y*16,
+      })
    end,
 
    -- test collision, assumes 16x16 object with corner at x, y

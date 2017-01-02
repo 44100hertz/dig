@@ -28,19 +28,13 @@ move = function (self)
    -- Spawn movement particles
    if self.dx > -1 and new_dx == -1 and self.tileon == 1 then
       actors.add({
-	    class=require "actors/particle",
-	    sprite=2,
-	    x=self.x+4,
-	    y=self.y-8,
-	    flip=false,
+            class=require "actors/particle", sprite=2,
+            x=self.x+4, y=self.y-8, flip=false,
       })
    elseif self.dx < 1 and new_dx == 1 and self.tileon == 1 then
       actors.add({
-	    class=require "actors/particle",
-	    sprite=2,
-	    x=self.x-4,
-	    y=self.y-8,
-	    flip=true,
+            class=require "actors/particle", sprite=2,
+            x=self.x-4, y=self.y-8, flip=true,
       })
    end
 
@@ -65,11 +59,9 @@ floor = function (self)
       self.y = math.floor(self.y * (1/16)) * 16
       sound.play("land")
       if self.tileon == 1 then
-         actors.add({
-               class=require "actors/particle",
-               sprite=1,
-               x=self.x-8,
-               y=self.y-8,
+         actors.add({class=require "actors/particle",
+                     sprite=1,
+                     x=self.x-8, y=self.y-8,
          })
       end
    end
@@ -84,11 +76,11 @@ floor = function (self)
    -- User input
    move(self)
 
-   if self.dx < 0 then self.frame_x = math.floor(self.timer*0.5 % 4)
-   elseif self.dx > 0 then self.frame_x = math.floor(-self.timer*0.5 % 4)
-   else self.frame_x = 0
+   if self.dx < 0 then self.frame[1] = math.floor(self.timer*0.5 % 4)
+   elseif self.dx > 0 then self.frame[1] = math.floor(-self.timer*0.5 % 4)
+   else self.frame[1] = 0
    end
-   self.frame_y = 6
+   self.frame[2] = 6
    self.size_y = 1
 
    if self.timer > 8 then
@@ -103,17 +95,17 @@ end
 
 -- In-air falling state
 air = function (self)
-   self.frame_x = 4 + math.floor(self.timer * self.spin_speed % 12)
-   self.frame_y = 6
+   self.frame[1] = 4 + math.floor(self.timer * self.spin_speed % 12)
+   self.frame[2] = 6
    self.size_y = 1
    move(self)
    if tiles.collide(self.x, self.y-8)>1 and self.dy < 0 then
       self.dy = -self.dy
       actors.add({
-	    class=require "actors/particle",
-	    sprite=3,
-	    x=self.x-8,
-	    y=self.y-8,
+            class=require "actors/particle",
+            sprite=3,
+            x=self.x-8,
+            y=self.y-8,
       })
    end
    if self.y % 16 < 2 and self.tileon > 0 and
@@ -131,11 +123,10 @@ air = function (self)
 end
 
 -- Attempt to dig a tile below
-local dig_anim = {0,0,1,2,3,3,3,4,5,5,5,6,7,8,0}
 dig = function (self)
+   local anim = {0,0,1,2,3,3,3,4,5,5,5,6,7,8,0}
    if self.timer < 15 then
-      self.frame_x = dig_anim[self.timer]
-      self.frame_y = 7
+      self.frame = {anim[self.timer], 7}
       self.size_y = 2
    else
       if self.tileon == 0 then
@@ -149,7 +140,7 @@ dig = function (self)
    if self.timer == 9 then
       if self.tileon == 1 then
          sound.play("dig2")
-         tiles.destroy(math.floor(self.x/16), math.floor(self.y/16))
+         tiles.destroy(self.x, self.y)
       end
    end
    self.dx = 0
@@ -160,8 +151,7 @@ return {
       self.dx, self.dy = 0,0
       self.spin_speed = 1
       loadstate(self, air)
-      self.frame_x = 0
-      self.frame_y = 6
+      self.frame = {0,6}
       self.size_y = 1
    end,
 
@@ -171,6 +161,6 @@ return {
    end,
 
    draw = function (self)
-      draw.add(self.frame_x, self.frame_y, self.x-8, self.y-12, 1, self.size_y)
+      draw.add(self.frame[1], self.frame[2], self.x-8, self.y-12, 1, self.size_y)
    end
 }
