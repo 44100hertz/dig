@@ -1,5 +1,12 @@
+local game = require "game"
 local actors = require "actors"
 local draw = require "draw"
+
+local pts = {
+   [0] = {20, 80},
+   {30, 120},
+   {40, 160},
+}
 
 local gem_collect = {
    init = function (self)
@@ -16,11 +23,13 @@ local gem_collect = {
 return {
    init = function (self)
       self.fx = self.kind+4
-      self.fy = math.ceil(math.random() * 2) + 1
+      self.big = math.ceil(math.random() * 2)
+      self.fy = self.big+1
    end,
 
    destroy = function (self)
       self.die = true
+      game.score(pts[self.kind][self.big])
       actors.add({
             class = gem_collect,
             x = self.x, y = self.y,

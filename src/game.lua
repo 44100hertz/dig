@@ -7,6 +7,7 @@ local player
 
 local scroll, dscroll
 local bg_canvas, bg_quad
+local points
 bg_canvas = love.graphics.newCanvas(32, 32)
 bg_canvas:setWrap("repeat", "repeat")
 
@@ -28,11 +29,14 @@ return {
          y = -200,
       }
       actors.add(player)
+      
+      points = 0
    end,
 
    update = function ()
       dscroll = (scroll < player.y-85 or scroll % 16 > 0) and -1 or 0
       scroll = scroll - dscroll
+      points = points + (-dscroll * 10 / 16)
       tiles.update(scroll)
       actors.update(scroll)
 
@@ -49,7 +53,11 @@ return {
       love.graphics.draw(bg_canvas, bg_quad, 0, math.floor(-scroll * 0.5) % 32 - 32)
       tiles.draw()
       actors.draw()
-      status.draw(math.floor(scroll / 16)+5, 10, 0, 5, scroll + 5)
+      status.draw(math.floor(points)+5, 10, 0, 5, scroll + 5)
       draw.draw(0, -scroll)
+   end,
+
+   score = function (amt)
+      points = points + amt
    end,
 }

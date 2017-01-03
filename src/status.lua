@@ -9,6 +9,5 @@ return {
          if coffx < 0 then coffx = 5 end
          draw.add(coffx + offx, offy, x+i*8, y, 0.5, 0.5)
       end
-      draw.add(15.5, 0, x+s:len()*8+8, y, 0.5, 0.5)
    end
 }
