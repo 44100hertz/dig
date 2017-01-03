@@ -55,8 +55,7 @@ end
 floor = function (self)
    -- Hitting ground animation
    if self.timer == 1 then
-      self.dx = 0
-      self.dy = 0
+      self.dx, self.dy = 0,0
       self.y = math.floor(self.y * (1/16)) * 16
       sound.play("land")
       if self.tileon == 1 then
@@ -114,7 +113,7 @@ air = function (self)
    then
       -- If on potential ledge top not below a rock, and falling, land
       loadstate(self, floor)
-      self.y = math.floor(self.y / 16) * 16
+      self:state()
    else
       -- If still in air
       self.dy = math.min(self.dy + 1/4, 2)
@@ -158,6 +157,7 @@ return {
    update = function (self)
       self.tileon = tiles.collide(self.x, self.y)
       self:state()
-      self.x = self.x % 240
+      self.x = math.max(self.x, 1)
+      self.x = math.min(self.x, 240)
    end
 }
