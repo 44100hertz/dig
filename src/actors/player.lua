@@ -1,6 +1,7 @@
 local tiles = require "tiles"
 local actors = require "actors"
 local sound = require "sound"
+local state = require "state"
 
 local bool2num = function (bool) return bool and 1 or 0 end
 
@@ -146,15 +147,18 @@ dig = function (self)
 end
 
 local dead = function (self)
+   self.sx = 1
    self.dx = 0
-   if not self.tileon then
+   if self.tileon == 0 then
       self.fx, self.fy = 8, 6
-      self.dy = 2
+      self.dy = 1
       self.timer = 0
    elseif self.timer < 20 then
       self.dy = 0
       self.fx = math.floor(self.timer / 4.0)
       self.fy = 9
+   elseif self.timer == 120 then
+      state.push(require "end")
    else
       self.fx = math.floor((self.timer / 4.0) % 2) + 5
    end
