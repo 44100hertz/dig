@@ -58,6 +58,7 @@ local gen_row = function (row, scroll)
       local gem = actors.add({
             class=require "actors/gem",
             x=gem_x*16, y=row*16,
+            kind=math.min(2, math.floor(math.random() * scroll / 200))
       })
       bind(gem_x, row, gem)
    end

@@ -15,8 +15,8 @@ local gem_collect = {
 
 return {
    init = function (self)
-      self.fx = self.kind or math.ceil(math.random() * 4) + 2
-      self.fy = self.big or math.ceil(math.random() * 2) + 1
+      self.fx = self.kind+4
+      self.fy = math.ceil(math.random() * 2) + 1
    end,
 
    destroy = function (self)
