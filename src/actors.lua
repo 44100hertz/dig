@@ -5,9 +5,7 @@ local actors
 local collide = function (a, b)
    if a.class.size and b.class.size then
       local sq = function (x) return x*x end
-      local ax, ay = a.x-(a.ox or 0), a.y-(a.oy or 0)
-      local bx, by = b.x-(b.ox or 0), b.y-(b.oy or 0)
-      if sq(a.class.size + b.class.size) > sq(ax-bx) + sq(ay-by) then
+      if sq(a.class.size + b.class.size) > sq(a.x-b.x) + sq(a.y-b.y) then
          a.class.collide(a, b)
          b.class.collide(b, a)
       end
