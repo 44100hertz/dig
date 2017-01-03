@@ -6,12 +6,12 @@ return {
       self.oy = 7
       if self.left then
          self.x = -10
-         self.ox = 5
+         self.ox = -6
          self.dx = 0.5
          self.flip = true
       else
          self.x = 250
-         self.ox = 11
+         self.ox = 6
          self.dx = -0.5
       end
       self.y_origin = self.y
