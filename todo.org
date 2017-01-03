@@ -1,0 +1,11 @@
+** TODO fix gem spawning on big rocks
+** TODO rectangular collisions
+** TODO use all sands
+** TODO fix slipping thru rocks
+** TODO walkin enemy
+** TODO prevent stuck, ungettable gems
+Either make rocks breakable, alter generation etc.
+** TODO end screen w/information
+** TODO title screen
+** TODO music
+** TODO sound
