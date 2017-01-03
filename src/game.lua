@@ -35,6 +35,13 @@ return {
       scroll = scroll - dscroll
       tiles.update(scroll)
       actors.update(scroll)
+
+      local ghost_chance = math.min(0.01, scroll * (1/100000))
+      if math.random() < ghost_chance then
+         local ghost_side = math.random()*120 + player.x > 180
+         local ghost_y = math.random()*160 + 40 + scroll
+         actors.add({class=require "actors/ghost", y=ghost_y, left=ghost_side})
+      end
    end,
 
    draw = function ()

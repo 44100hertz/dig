@@ -1,5 +1,5 @@
 local assets_img = love.graphics.newImage("assets.png")
-local sb = love.graphics.newSpriteBatch(assets_img, 256, "stream")
+local sb = love.graphics.newSpriteBatch(assets_img, 2048, "stream")
 local assets_width, assets_height = assets_img:getDimensions()
 
 local quads = {}

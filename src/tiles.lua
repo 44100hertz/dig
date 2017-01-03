@@ -3,11 +3,8 @@
 local draw = require "draw"
 local actors = require "actors"
 
--- 15x10 onscreen tiles
--- 15x15 tiles loaded onscreen; 5 above you
--- tile_off says where to start, moves up with the game
--- for each tile, true = sand, false = none
 local sand = {}
+local binds = {}
 local tile_off = 0
 
 local rng = function (num)
@@ -57,8 +54,6 @@ local gen_row = function (row, scroll)
             x=gem_x*16, y=row*16,
       })
    end
-
-   actors.add({class=require "actors/ghost", y=row*16})
 end
 
 local draw_tile = function(x, y)
@@ -114,6 +109,9 @@ return {
          dy = -1,
          x=x*16, y=y*16,
       })
+      if binds[y] and binds[y][x] then
+         binds[y][x].class.destroy(binds[y][x])
+      end
    end,
 
    -- test collision, assumes 16x16 object with corner at x, y
@@ -122,5 +120,11 @@ return {
       local tx = math.floor(x/16)
       local ty = math.floor(y/16)
       return sand[ty] and sand[ty][tx] or 0
+   end,
+
+   -- bind an actor to a given space, notify them when destroyed
+   bind = function (x, y, actor)
+      if not binds[y] then binds[y] = {} end
+      binds[y][x] = actor
    end
 }
