@@ -14,6 +14,15 @@ local collide = function (a, b)
    end
 end
 
+local draw_one = function (v)
+   if v.class.draw then v.class.draw(v) end
+   if v.fx then
+      local ox = v.ox or 0
+      local oy = v.oy or 0
+      draw.add(v.fx, v.fy, v.x-ox, v.y-oy, v.sx, v.sy, v.flip)
+   end
+end
+
 return {
    init = function ()
       actors = {}
@@ -42,12 +51,10 @@ return {
 
    draw = function ()
       for _,v in ipairs(actors) do
-         if v.class.draw then v.class.draw(v) end
-         if v.fx then
-            local ox = v.ox or 0
-            local oy = v.oy or 0
-            draw.add(v.fx, v.fy, v.x-ox, v.y-oy, v.sx, v.sy, v.flip)
-         end
+         if not v.class.priority then draw_one(v) end
+      end
+      for _,v in ipairs(actors) do
+         if v.class.priority then draw_one(v) end
       end
    end,
 

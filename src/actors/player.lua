@@ -163,6 +163,7 @@ end
 return {
    size = 4,
    group = "player",
+   priority = true,
    init = function (self)
       self.dx, self.dy = 0,0
       self.sx, self.sy = 1,1
