@@ -145,7 +145,24 @@ dig = function (self)
    self.dx = 0
 end
 
+local dead = function (self)
+   self.dx = 0
+   if not self.tileon then
+      self.fx, self.fy = 8, 6
+      self.dy = 2
+      self.timer = 0
+   elseif self.timer < 20 then
+      self.dy = 0
+      self.fx = math.floor(self.timer / 4.0)
+      self.fy = 9
+   else
+      self.fx = math.floor((self.timer / 4.0) % 2) + 5
+   end
+end
+
 return {
+   size = 4,
+   group = "player",
    init = function (self)
       self.dx, self.dy = 0,0
       self.sx, self.sy = 1,1
@@ -159,5 +176,11 @@ return {
       self:state()
       self.x = math.max(self.x, 1)
       self.x = math.min(self.x, 240)
+   end,
+
+   collide = function (self, with)
+      if self.state ~= dead then
+         loadstate(self, dead)
+      end
    end
 }

@@ -1,5 +1,8 @@
 return {
+   size = 3,
+   group = "enemy",
    init = function (self)
+      self.ox, self.oy = 8,7
       if self.left then
          self.x = -10
          self.dx = 0.5
@@ -25,4 +28,6 @@ return {
       self.y = self.y_origin + self.y_off
       self.fx = math.floor(self.dy*2 + 0.5) + 3
    end,
+
+   collide = function (self, with) end,
 }

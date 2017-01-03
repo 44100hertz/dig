@@ -2,12 +2,29 @@ local draw = require "draw"
 
 local actors
 
+local collide = function (a, b)
+   if a.class.size and b.class.size then
+      local sq = function (x) return x*x end
+      local ax, ay = a.x-(a.ox or 0), a.y-(a.oy or 0)
+      local bx, by = b.x-(b.ox or 0), b.y-(b.oy or 0)
+      if sq(a.class.size + b.class.size) > sq(ax-bx) + sq(ay-by) then
+         a.class.collide(a, b)
+         b.class.collide(b, a)
+      end
+   end
+end
+
 return {
    init = function ()
       actors = {}
    end,
 
    update = function (scroll)
+      for i = 1,#actors do
+         for j = i+1,#actors do
+            collide(actors[i], actors[j])
+         end
+      end
       for _,v in ipairs(actors) do
          if v.class.update then
             v.class.update(v, scroll)
@@ -17,6 +34,9 @@ return {
             if v.dy then v.y = v.y + v.dy end
          end
          if v.timer then v.timer = v.timer + 1 end
+      end
+      for k,v in ipairs(actors) do
+         if v.die then table.remove(actors, k) end
       end
    end,
 
@@ -28,9 +48,6 @@ return {
             local oy = v.oy or 0
             draw.add(v.fx, v.fy, v.x-ox, v.y-oy, v.sx, v.sy, v.flip)
          end
-      end
-      for k,v in ipairs(actors) do
-         if v.die then table.remove(actors, k) end
       end
    end,
 
