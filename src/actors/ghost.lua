@@ -1,14 +1,17 @@
 return {
    size = 3,
    group = "enemy",
+   priority = 1,
    init = function (self)
-      self.ox, self.oy = 8,7
+      self.oy = 7
       if self.left then
          self.x = -10
+         self.ox = 5
          self.dx = 0.5
          self.flip = true
       else
          self.x = 250
+         self.ox = 11
          self.dx = -0.5
       end
       self.y_origin = self.y
