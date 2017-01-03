@@ -3,6 +3,10 @@ love.filesystem.setRequirePath("src/?.lua")
 local state = require "state"
 local game = require "game"
 
+love.window.setMode(240*3, 160*3)
+
+local lastf
+
 love.run = function ()
    love.math.setRandomSeed(os.time())
    state.push(game)
@@ -27,5 +31,15 @@ love.run = function ()
       love.graphics.setBlendMode("replace", "premultiplied")
       love.graphics.draw(canvas, 0, 0, 0, 3, 3)
       love.graphics.present()
+
+      local f = love.keyboard.isScancodeDown("f")
+      if f and not lastf then
+         if love.window.getFullscreen() == true then
+            love.window.setFullscreen(false)
+         else
+            love.window.setFullscreen(true)
+         end
+      end
+      lastf = f
    end
 end
