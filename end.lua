@@ -1,3 +1,5 @@
+local state = require "state"
+
 local timer
 
 return {
@@ -7,6 +9,10 @@ return {
 
    update = function ()
       timer = timer + 1
+      if timer == 400 then
+         state.pop()
+         state.push(require "game")
+      end
    end,
 
    draw = function ()
