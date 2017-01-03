@@ -3,9 +3,9 @@ local actors = require "actors"
 local draw = require "draw"
 
 local pts = {
-   [0] = {20, 80},
-   {30, 120},
-   {40, 160},
+   [0] = {10, 30},
+   {20, 60},
+   {30, 90},
 }
 
 local gem_collect = {
