@@ -37,5 +37,6 @@ return {
    add = function (actor)
       actor.class.init(actor)
       table.insert(actors, actor)
+      return actor
    end,
 }

@@ -19,6 +19,12 @@ local binom_rng = function (num)
    return math.floor(sum * num * (1/8))
 end
 
+-- bind an actor to a given space, notify them when destroyed
+local bind = function (x, y, actor)
+   if not binds[y] then binds[y] = {} end
+   binds[y][x] = actor
+end
+
 local gen_row = function (row, scroll)
    sand[row] = {}
    for i = 0,15 do sand[row][i] = 1 end
@@ -49,10 +55,11 @@ local gen_row = function (row, scroll)
    -- Gems, 3 4 5
    local gem_x = rng(15)
    if math.random() < 1/8 and sand[row] and sand[row][gem_x]==1 then
-      actors.add({
+      local gem = actors.add({
             class=require "actors/gem",
             x=gem_x*16, y=row*16,
       })
+      bind(gem_x, row, gem)
    end
 end
 
@@ -121,10 +128,4 @@ return {
       local ty = math.floor(y/16)
       return sand[ty] and sand[ty][tx] or 0
    end,
-
-   -- bind an actor to a given space, notify them when destroyed
-   bind = function (x, y, actor)
-      if not binds[y] then binds[y] = {} end
-      binds[y][x] = actor
-   end
 }
