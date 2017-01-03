@@ -89,6 +89,7 @@ floor = function (self)
          loadstate(self, dig)
       elseif love.keyboard.isScancodeDown("z") then
          loadstate(self, jump)
+         self:state()
       end
    end
 end
@@ -99,7 +100,7 @@ air = function (self)
    self.fy = 6
    self.sy = 1
    move(self)
-   if tiles.collide(self.x, self.y-8)>1 and self.dy < 0 then
+   if self.timer == 3 and tiles.collide(self.x, self.y-8)>1 then
       self.dy = -self.dy
       actors.add({
             class=require "actors/particle",
@@ -113,7 +114,6 @@ air = function (self)
    then
       -- If on potential ledge top not below a rock, and falling, land
       loadstate(self, floor)
-      self:state()
    else
       -- If still in air
       self.dy = math.min(self.dy + 1/4, 2)
