@@ -124,8 +124,8 @@ return {
    -- test collision, assumes 16x16 object with corner at x, y
    -- returns the tile that was collided with
    collide = function (x, y)
-      local tx = math.floor(x/16)
-      local ty = math.floor(y/16)
-      return sand[ty] and sand[ty][tx] or 0
+      x = math.floor(x/16)
+      y = math.floor(y/16)
+      return sand[y] and sand[y][x] or 0
    end,
 }
