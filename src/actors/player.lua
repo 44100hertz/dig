@@ -181,7 +181,7 @@ charge = function (self)
    if not input.held("dd") then
       loadstate(self, floor)
    end
-   if self.timer > 45 then
+   if self.timer > 30 then
       self.fx = math.floor(self.timer / 8.0 % 2) + 10
       if input.hit("b") then
          loadstate(self, crack)
