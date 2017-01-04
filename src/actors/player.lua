@@ -45,13 +45,13 @@ move = function (self)
    -- Spawn movement particles
    if self.dx > -1 and new_dx == -1 and self.tileon == 1 then
       local sand = {
-         sprite=2, flip=false,
+         fy=2, flip=false,
          x=self.x+4, y=self.y-8,
       }
       actors.add(require "actors/particle", sand)
    elseif self.dx < 1 and new_dx == 1 and self.tileon == 1 then
       local sand = {
-         sprite=2, flip=false,
+         fy=2, flip=true,
          x=self.x-4, y=self.y-8,
       }
       actors.add(require "actors/particle", sand)
@@ -92,7 +92,7 @@ floor = function (self)
       sound.play("land")
       if self.tileon == 1 then
          local sand = {
-            sprite=1,
+            fy=1,
             x=self.x-8, y=self.y-8,
          }
          actors.add(require "actors/particle", sand)
@@ -126,7 +126,7 @@ air = function (self)
       self.dy = -self.dy
       local bonk = {
          x=self.x-8, y=self.y-8,
-         sprite=3,
+         fy=3,
       }
       actors.add(require "actors/particle", bonk)
    end
@@ -155,7 +155,6 @@ dig = function (self)
    end
    if self.timer == 9 then
       if self.tileon == 1 then
-         sound.play("dig2")
          tiles.destroy(self.x, self.y)
       end
    end
@@ -165,6 +164,7 @@ crack = function (self)
    if self.timer == 1 then
       self.fx = 12
    elseif self.timer == 4 then
+      tiles.destroy(self.x, self.y)
       self.fx = 13
    elseif self.timer == 30 then
       self.fx = 14
