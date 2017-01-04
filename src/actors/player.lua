@@ -6,11 +6,12 @@ local state = require "state"
 local bool2num = function (bool) return bool and 1 or 0 end
 
 local loadstate = function (self, state)
-   self.timer = 0
+   self.timer = 1
    self.state = state
+   self:state()
 end
 
-local act, move, jump, floor, air, dig, crack
+local act, move, jump, floor, air, dig, charge, crack, exit
 
 act = function (self)
    if love.keyboard.isScancodeDown("x") then
@@ -18,7 +19,12 @@ act = function (self)
       loadstate(self, dig)
    elseif love.keyboard.isScancodeDown("z") then
       loadstate(self, jump)
-      self:state()
+   elseif
+      love.keyboard.isScancodeDown("down") and
+      self.dx == 0 and
+      self.state ~= charge
+   then
+      self.state = charge
    end
 end
 
@@ -51,6 +57,16 @@ move = function (self)
    end
 
    self.dx = new_dx
+end
+
+exit = function (self)
+   if self.tileon == 0 then
+      self.spin_speed = 1
+      loadstate(self, air)
+      self.y = self.y + 2
+   else
+      loadstate(self, floor)
+   end
 end
 
 -- Lag state before a jump
@@ -105,8 +121,7 @@ air = function (self)
    self.fx = 4 + math.floor(self.timer * self.spin_speed % 12)
    self.fy = 6
    self.sy = 1
-   move(self)
-   if self.timer == 3 and tiles.collide(self.x, self.y-8)>1 then
+   if tiles.collide(self.x, self.y-8)>1 then
       self.dy = -self.dy
       local bonk = {
          x=self.x-8, y=self.y-8,
@@ -121,25 +136,20 @@ air = function (self)
       loadstate(self, floor)
    else
       -- If still in air
+      move(self)
       self.dy = math.min(self.dy + 1/4, 2)
    end
 end
 
 -- Attempt to dig a tile below
 dig = function (self)
-   local anim = {0,0,1,2,3,3,3,4,5,5,5,6,7,8,0}
    if self.timer < 15 then
+      local anim = {0,0,1,2,3,3,3,4,5,5,5,6,7,8,0}
       self.fx = anim[self.timer]
       self.fy = 7
       self.sy = 2
    else
-      if self.tileon == 0 then
-         self.spin_speed = 1
-         loadstate(self, air)
-         self.y = self.y + 2
-      else
-         loadstate(self, floor)
-      end
+      exit(self)
    end
    if self.timer == 9 then
       if self.tileon == 1 then
@@ -151,6 +161,33 @@ dig = function (self)
 end
 
 crack = function (self)
+   if self.timer == 1 then
+      self.fx = 12
+   elseif self.timer == 4 then
+      self.fx = 13
+   elseif self.timer == 30 then
+      self.fx = 14
+   elseif self.timer == 32 then
+      self.fx = 15
+   elseif self.timer == 34 then
+      exit(self)
+   end
+end
+
+charge = function (self)
+   self.fy = 7
+   self.sy = 2
+   if not love.keyboard.isScancodeDown("down") then
+      loadstate(self, floor)
+   end
+   if self.timer > 45 then
+      self.fx = math.floor(self.timer / 8.0 % 2) + 10
+      if love.keyboard.isScancodeDown("x") then
+         loadstate(self, crack)
+      end
+   else
+      self.fx = 9
+   end
 end
 
 local dead = function (self)
