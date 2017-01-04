@@ -16,7 +16,7 @@ return {
       if chans[chan] then chans[chan]:stop() end
       if sounds[sound] then
          chans[chan] = sounds[sound]
-         chans[chan]:play()
+--         chans[chan]:play()
       end
    end
 }
