@@ -2,6 +2,7 @@ love.filesystem.setRequirePath("src/?.lua")
 
 local state = require "state"
 local game = require "game"
+local input = require "input"
 
 love.window.setMode(240*3, 160*3)
 
@@ -32,6 +33,7 @@ love.run = function ()
       love.graphics.draw(canvas, 0, 0, 0, 3, 3)
       love.graphics.present()
 
+      input.update()
       local f = love.keyboard.isScancodeDown("f")
       if f and not lastf then
          if love.window.getFullscreen() == true then
