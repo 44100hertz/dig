@@ -112,21 +112,18 @@ return {
    destroy = function (x, y)
       x = math.floor(x / 16)
       y = math.floor(y / 16)
-      local p_type
       if sand[y][x] == 1 then
          sound.play("dig2")
-         p_type = 0
-      else
-         sound.play("land")
-         p_type = 4
+         local particle = { x=x*16, y=y*16, fy=0 }
+         actors.add(require "actors/particle", particle)
+      elseif sand[y][x] > 1 then
+         -- play rock breaking sound
+         -- spawn rock particles
+         for _ = 1,10 do
+            actors.add(require "actors/particle", {x=x*16, y=y*16, fy=4})
+         end
       end
       sand[y][x] = 0
-      local particle = {
-         fy = p_type,
-         dy = -1,
-         x=x*16, y=y*16,
-      }
-      actors.add(require "actors/particle", particle)
       if binds[y] and binds[y][x] then
          binds[y][x]:destroy()
       end
