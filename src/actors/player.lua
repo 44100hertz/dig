@@ -13,14 +13,12 @@ end
 local act, move, jump, floor, air, dig, crack
 
 act = function (self)
-   if self.timer > 8 then
-      if love.keyboard.isScancodeDown("x") then
-         sound.play("dig1")
-         loadstate(self, dig)
-      elseif love.keyboard.isScancodeDown("z") then
-         loadstate(self, jump)
-         self:state()
-      end
+   if love.keyboard.isScancodeDown("x") then
+      sound.play("dig1")
+      loadstate(self, dig)
+   elseif love.keyboard.isScancodeDown("z") then
+      loadstate(self, jump)
+      self:state()
    end
 end
 
@@ -153,8 +151,6 @@ dig = function (self)
 end
 
 crack = function (self)
-   self.fx, self.fy = 7, 9
-   
 end
 
 local dead = function (self)
