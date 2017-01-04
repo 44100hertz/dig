@@ -13,7 +13,7 @@ return {
    end,
 
    update = function ()
-      timer = timer + 1 
+      timer = timer + 1
    end,
 
    draw = function ()
