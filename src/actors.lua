@@ -37,10 +37,10 @@ return {
             v:update(scroll)
          end
          if v.x then
-            if v.dx then v.x = v.x + v.dx end
-            if v.dy then v.y = v.y + v.dy end
+            v.x = v.x + v.dx
+            v.y = v.y + v.dy
          end
-         if v.timer then v.timer = v.timer + 1 end
+         v.timer = v.timer + 1
       end
       for k,v in ipairs(actors) do
          if v.die then table.remove(actors, k) end
@@ -59,7 +59,10 @@ return {
    add = function (class, actor)
       if not class.__index then class.__index = class end
       setmetatable(actor, class)
-      actor:init()
+      if actor.init then actor:init() end
+      if not actor.dx then actor.dx = 0 end
+      if not actor.dy then actor.dy = 0 end
+      actor.timer = 0
       table.insert(actors, actor)
    end,
 }

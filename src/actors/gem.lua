@@ -9,10 +9,7 @@ local pts = {
 }
 
 local gem_collect = {
-   init = function (self)
-      self.dy = -1
-      self.timer = 0
-   end,
+   dy = -1,
 
    update = function (self)
       if self.timer == 30 then self.dy = 0 end

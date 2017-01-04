@@ -170,13 +170,10 @@ return {
    size = 4,
    group = "player",
    priority = true,
-   init = function (self)
-      self.dx, self.dy = 0,0
-      self.sx, self.sy = 1,1
-      self.ox, self.oy = 8, 12
-      self.spin_speed = 1
-      loadstate(self, air)
-   end,
+   sx=1, sy=1,
+   ox=8, oy=12,
+   spin_speed = 1,
+   state = air,
 
    update = function (self)
       self.tileon = tiles.collide(self.x, self.y)

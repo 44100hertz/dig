@@ -1,12 +1,6 @@
 local draw = require "draw"
 
 return {
-   init = function (self)
-      self.flip = self.flip and true or false
-      self.sprite = self.sprite or 0
-      self.timer = 0
-   end,
-
    update = function (self)
       if self.timer == 13 then self.die = true end
    end,
