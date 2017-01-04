@@ -2,8 +2,7 @@ local tiles = require "tiles"
 local actors = require "actors"
 local sound = require "sound"
 local state = require "state"
-
-local bool2num = function (bool) return bool and 1 or 0 end
+local input = require "input"
 
 local loadstate = function (self, state)
    self.timer = 1
@@ -11,29 +10,31 @@ local loadstate = function (self, state)
    self:state()
 end
 
-local act, move, jump, floor, air, dig, charge, crack, exit
+local act, move, exit
+local jump, floor, air, dig, charge, crack, dead
 
 act = function (self)
-   if love.keyboard.isScancodeDown("x") then
+   if input.hit("b") then
       sound.play("dig1")
       loadstate(self, dig)
-   elseif love.keyboard.isScancodeDown("z") then
+   elseif input.hit("a") then
       loadstate(self, jump)
    elseif
-      love.keyboard.isScancodeDown("down") and
+      input.hit("dd") and
       self.dx == 0 and
       self.state ~= charge
    then
-      self.state = charge
+      loadstate(self, charge)
    end
 end
 
 -- General function for movement
 move = function (self)
    -- Set a sort of goal position
+   local bool2num = function (bool) return bool and 1 or 0 end
    local new_dx =
-      bool2num(love.keyboard.isScancodeDown("right")) -
-      bool2num(love.keyboard.isScancodeDown("left"))
+      bool2num(input.held("dr")) -
+      bool2num(input.held("dl"))
 
    -- Do not allow collisions with rocks
    if tiles.collide(self.x + new_dx, self.y-1)>1 then
@@ -121,7 +122,7 @@ air = function (self)
    self.fx = 4 + math.floor(self.timer * self.spin_speed % 12)
    self.fy = 6
    self.sy = 1
-   if tiles.collide(self.x, self.y-8)>1 then
+   if tiles.collide(self.x + self.dx, self.y-8)>1 and self.dy < 0 then
       self.dy = -self.dy
       local bonk = {
          x=self.x-8, y=self.y-8,
@@ -143,6 +144,7 @@ end
 
 -- Attempt to dig a tile below
 dig = function (self)
+   self.dx = 0
    if self.timer < 15 then
       local anim = {0,0,1,2,3,3,3,4,5,5,5,6,7,8,0}
       self.fx = anim[self.timer]
@@ -157,7 +159,6 @@ dig = function (self)
          tiles.destroy(self.x, self.y)
       end
    end
-   self.dx = 0
 end
 
 crack = function (self)
@@ -177,12 +178,12 @@ end
 charge = function (self)
    self.fy = 7
    self.sy = 2
-   if not love.keyboard.isScancodeDown("down") then
+   if not input.held("dd") then
       loadstate(self, floor)
    end
    if self.timer > 45 then
       self.fx = math.floor(self.timer / 8.0 % 2) + 10
-      if love.keyboard.isScancodeDown("x") then
+      if input.hit("b") then
          loadstate(self, crack)
       end
    else
@@ -190,8 +191,8 @@ charge = function (self)
    end
 end
 
-local dead = function (self)
-   self.sx = 1
+dead = function (self)
+   self.sy = 1
    self.dx = 0
    if self.tileon == 0 then
       self.fx, self.fy = 8, 6
