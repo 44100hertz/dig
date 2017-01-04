@@ -3,17 +3,17 @@ local draw = require "draw"
 local actors
 
 local collide = function (a, b)
-   if a.class.size and b.class.size then
+   if a.size and b.size then
       local sq = function (x) return x*x end
-      if sq(a.class.size + b.class.size) > sq(a.x-b.x) + sq(a.y-b.y) then
-         a.class.collide(a, b)
-         b.class.collide(b, a)
+      if sq(a.size + b.size) > sq(a.x-b.x) + sq(a.y-b.y) then
+         a:collide(b)
+         b:collide(a)
       end
    end
 end
 
 local draw_one = function (v)
-   if v.class.draw then v.class.draw(v) end
+   if v.draw then v:draw() end
    if v.fx then
       local ox = v.ox or 0
       local oy = v.oy or 0
@@ -33,8 +33,8 @@ return {
          end
       end
       for _,v in ipairs(actors) do
-         if v.class.update then
-            v.class.update(v, scroll)
+         if v.update then
+            v:update(scroll)
          end
          if v.x then
             if v.dx then v.x = v.x + v.dx end
@@ -49,16 +49,17 @@ return {
 
    draw = function ()
       for _,v in ipairs(actors) do
-         if not v.class.priority then draw_one(v) end
+         if not v.priority then draw_one(v) end
       end
       for _,v in ipairs(actors) do
-         if v.class.priority then draw_one(v) end
+         if v.priority then draw_one(v) end
       end
    end,
 
-   add = function (actor)
-      actor.class.init(actor)
+   add = function (class, actor)
+      if not class.__index then class.__index = class end
+      setmetatable(actor, class)
+      actor:init()
       table.insert(actors, actor)
-      return actor
    end,
 }

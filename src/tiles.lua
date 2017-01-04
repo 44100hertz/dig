@@ -55,11 +55,11 @@ local gen_row = function (row, scroll)
    -- Gems, 3 4 5
    local gem_x = rng(15)
    if math.random() < 1/8 and sand[row] and sand[row][gem_x]==1 then
-      local gem = actors.add({
-            class=require "actors/gem",
-            x=gem_x*16, y=row*16,
-            kind=math.min(2, math.floor(math.random() * scroll / 200))
-      })
+      local gem = {
+         x=gem_x*16, y=row*16,
+         kind=math.min(2, math.floor(math.random() * scroll / 200))
+      }
+      actors.add(require "actors/gem", gem)
       bind(gem_x, row, gem)
    end
 end
@@ -112,13 +112,14 @@ return {
       x = math.floor(x / 16)
       y = math.floor(y / 16)
       sand[y][x] = 0
-      actors.add({
-         class = require "actors/particle", sprite = 0,
+      local particle = {
+         sprite = 0,
          dy = -1,
          x=x*16, y=y*16,
-      })
+      }
+      actors.add(require "actors/particle", particle)
       if binds[y] and binds[y][x] then
-         binds[y][x].class.destroy(binds[y][x])
+         binds[y][x]:destroy()
       end
    end,
 

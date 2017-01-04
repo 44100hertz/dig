@@ -23,13 +23,8 @@ return {
       scroll = -120
       actors.init()
       tiles.init()
-      player = {
-         class = require "actors/player",
-         x = 120,
-         y = -200,
-      }
-      actors.add(player)
-      
+      player = {x = 120, y = -200}
+      actors.add(require "actors/player", player)
       points = 0
    end,
 
@@ -44,7 +39,7 @@ return {
       if math.random() < ghost_chance then
          local ghost_side = math.random()*120 + player.x > 180
          local ghost_y = math.random()*160 + 40 + scroll
-         actors.add({class=require "actors/ghost", y=ghost_y, left=ghost_side})
+         actors.add(require "actors/ghost", {y=ghost_y, left=ghost_side})
       end
    end,
 

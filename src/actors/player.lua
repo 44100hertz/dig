@@ -27,15 +27,17 @@ move = function (self)
 
    -- Spawn movement particles
    if self.dx > -1 and new_dx == -1 and self.tileon == 1 then
-      actors.add({
-            class=require "actors/particle", sprite=2,
-            x=self.x+4, y=self.y-8, flip=false,
-      })
+      local sand = {
+         sprite=2, flip=false,
+         x=self.x+4, y=self.y-8,
+      }
+      actors.add(require "actors/particle", sand)
    elseif self.dx < 1 and new_dx == 1 and self.tileon == 1 then
-      actors.add({
-            class=require "actors/particle", sprite=2,
-            x=self.x-4, y=self.y-8, flip=true,
-      })
+      local sand = {
+         sprite=2, flip=false,
+         x=self.x-4, y=self.y-8,
+      }
+      actors.add(require "actors/particle", sand)
    end
 
    self.dx = new_dx
@@ -60,10 +62,11 @@ floor = function (self)
       self.y = math.floor(self.y * (1/16)) * 16
       sound.play("land")
       if self.tileon == 1 then
-         actors.add({class=require "actors/particle",
-                     sprite=1,
-                     x=self.x-8, y=self.y-8,
-         })
+         local sand = {
+            sprite=1,
+            x=self.x-8, y=self.y-8,
+         }
+         actors.add(require "actors/particle", sand)
       end
    end
 
@@ -103,12 +106,11 @@ air = function (self)
    move(self)
    if self.timer == 3 and tiles.collide(self.x, self.y-8)>1 then
       self.dy = -self.dy
-      actors.add({
-            class=require "actors/particle",
-            sprite=3,
-            x=self.x-8,
-            y=self.y-8,
-      })
+      local bonk = {
+         x=self.x-8, y=self.y-8,
+         sprite=3,
+      }
+      actors.add(require "actors/particle", bonk)
    end
    if self.y % 16 < 2 and self.tileon > 0 and
       tiles.collide(self.x, self.y-16)<2 and self.dy > 0

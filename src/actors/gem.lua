@@ -30,11 +30,11 @@ return {
    destroy = function (self)
       self.die = true
       game.score(pts[self.kind][self.big])
-      actors.add({
-            class = gem_collect,
-            x = self.x, y = self.y,
-            fx = self.fx,
-            fy = self.fy + 2,
-      })
+      local gem = {
+         x = self.x, y = self.y,
+         fx = self.fx,
+         fy = self.fy + 2,
+      }
+      actors.add(gem_collect, gem)
    end
 }
