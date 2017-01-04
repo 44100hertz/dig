@@ -10,7 +10,19 @@ local loadstate = function (self, state)
    self.state = state
 end
 
-local move, jump, floor, air, dig
+local act, move, jump, floor, air, dig, crack
+
+act = function (self)
+   if self.timer > 8 then
+      if love.keyboard.isScancodeDown("x") then
+         sound.play("dig1")
+         loadstate(self, dig)
+      elseif love.keyboard.isScancodeDown("z") then
+         loadstate(self, jump)
+         self:state()
+      end
+   end
+end
 
 -- General function for movement
 move = function (self)
@@ -56,8 +68,10 @@ end
 
 -- Grounded
 floor = function (self)
-   -- Hitting ground animation
+   -- Hitting ground
    if self.timer == 1 then
+      self.fy = 6
+      self.sy = 1
       self.dx, self.dy = 0,0
       self.y = math.floor(self.y * (1/16)) * 16
       sound.play("land")
@@ -70,6 +84,12 @@ floor = function (self)
       end
    end
 
+   -- Walking anim
+   if self.dx < 0 then self.fx = math.floor(self.timer*0.5 % 4)
+   elseif self.dx > 0 then self.fx = math.floor(-self.timer*0.5 % 4)
+   else self.fx = 0
+   end
+
    -- If not actually grounded, enter air state
    if self.tileon == 0 then
       self.spin_speed = 1
@@ -79,23 +99,7 @@ floor = function (self)
 
    -- User input
    move(self)
-
-   if self.dx < 0 then self.fx = math.floor(self.timer*0.5 % 4)
-   elseif self.dx > 0 then self.fx = math.floor(-self.timer*0.5 % 4)
-   else self.fx = 0
-   end
-   self.fy = 6
-   self.sy = 1
-
-   if self.timer > 8 then
-      if love.keyboard.isScancodeDown("x") then
-         sound.play("dig1")
-         loadstate(self, dig)
-      elseif love.keyboard.isScancodeDown("z") then
-         loadstate(self, jump)
-         self:state()
-      end
-   end
+   act(self)
 end
 
 -- In-air falling state
@@ -146,6 +150,11 @@ dig = function (self)
       end
    end
    self.dx = 0
+end
+
+crack = function (self)
+   self.fx, self.fy = 7, 9
+   
 end
 
 local dead = function (self)
