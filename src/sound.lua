@@ -1,10 +1,14 @@
-local sounds = {
-   dig1 = love.audio.newSource("sound/dig1.wav"),
-   dig2 = love.audio.newSource("sound/dig2.wav"),
-   land = love.audio.newSource("sound/land.wav"),
+local soundlist = {
+   "dig1", "dig2", "land"
 }
 
+local sounds = {}
 local chans = {}
+
+for k,v in ipairs(soundlist) do
+   local path = string.format("sound/%s.wav", v)
+   sounds[v] = love.audio.newSource(path)
+end
 
 return {
    play = function (sound, chan)
