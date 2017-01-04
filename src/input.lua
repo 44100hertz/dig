@@ -55,11 +55,11 @@ return {
       keyBind = binds
    end,
 
-   held = function (input)
+   held = function (k)
       return (buttons[k] > 0)
    end,
 
-   hit = function (input)
+   hit = function (k)
       return (buttons[k] == 1)
    end,
 }
