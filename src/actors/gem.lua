@@ -10,7 +10,6 @@ local pts = {
 
 local gem_collect = {
    dy = -1,
-
    update = function (self)
       if self.timer == 30 then self.dy = 0 end
       if self.timer == 60 then self.die = true end
