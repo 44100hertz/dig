@@ -2,6 +2,7 @@
 ** DONE fix collisions
 ** DONE use all sands
 ** DONE fix slipping thru rocks
+** TODO player collisions such that hbox x and y not needed
 ** TODO walkin enemy
 ** DONE prevent stuck, ungettable gems
 Either make rocks breakable, alter generation etc.
