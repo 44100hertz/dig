@@ -5,12 +5,13 @@ local keyBind = {
 }
 
 local joyBind = {
-   a="a", b="b",
+   b="a", a="b",
    du="dpup", dd="dpdown",
    dl="dpleft", dr="dpright",
 }
 
 local joy = love.joystick.getJoysticks()[1]
+love.joystick.loadGamepadMappings("gamecontrollerdb.txt")
 
 local joy2hat = function (lr, ud, check)
    local dz = 0.5 --deadzone
@@ -28,8 +29,8 @@ return {
    update = function ()
       local lr, ud
       if joy then
-	 lr = joy:getAxis(1)
-	 ud = joy:getAxis(2)
+         lr = joy:getAxis(1)
+         ud = joy:getAxis(2)
       end
 
       for k,v in pairs(keyBind) do
