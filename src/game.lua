@@ -20,16 +20,16 @@ return {
       end)
       bg_quad = love.graphics.newQuad(0, 0, 240, 160+32, 32, 32)
 
-      scroll = -120
+      scroll = -40
       actors.init()
       tiles.init()
-      player = {x = 120, y = -200}
+      player = {x = 120, y = 0}
       actors.add(require "actors/player", player)
       points = 0
    end,
 
    update = function ()
-      dscroll = (scroll < player.y-85 or scroll % 16 > 0) and -1 or 0
+      dscroll = (scroll < player.y-81 or scroll % 16 > 0) and -1 or 0
       scroll = scroll - dscroll
       points = points + (-dscroll * 10 / 16)
       tiles.update(scroll)
