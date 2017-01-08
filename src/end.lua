@@ -1,19 +1,19 @@
 local state = require "state"
+local input = require "input"
 
 local timer
 
 return {
    init = function ()
       timer = 0
-      love.keypressed = function ()
-         state.pop()
-         state.push(require "game")
-         love.keypressed = function () end
-      end
    end,
 
    update = function ()
       timer = timer + 1
+      if input.hit("a") or input.hit("b") then
+         state.pop()
+         state.push(require "game")
+      end
    end,
 
    draw = function ()
