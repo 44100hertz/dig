@@ -82,8 +82,8 @@ floor = function (self)
       sound.play("land")
       if self.tileon == 1 then
          local sand = {
-            fy=1,
-            x=self.x-8, y=self.y-6,
+            fy=1, priority=true,
+            x=self.x-8, y=self.y-4,
          }
          actors.add(require "actors/particle", sand)
       end
