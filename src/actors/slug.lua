@@ -16,8 +16,7 @@ return {
    end,
 
    update = function (self, scroll)
-      local tileon = tiles.collide(self.x - self.dir * 8, self.y)
-      if tileon == 0 then
+      if tiles.collide(self.x, self.y) == 0 then
          self.falling = true
          self.fx = math.floor((self.timer / 4) % 2) + 4
          self.dy = math.min(self.dy + 0.1, 2)
@@ -27,22 +26,15 @@ return {
          self.y = math.floor(self.y / 16) * 16
          self.fx = math.floor(self.timer / 4) % 4
          if tiles.collide(self.x + self.dir, self.y - 8) > 4 or
-            self.x + self.dir < 8 or self.x + self.dir > 240
+            self.x + self.dir < 0 or self.x + self.dir > 240
          then
             self.dir = -self.dir
          end
       end
       self.dx = self.falling and 0 or self.dir
-      if self.flip then
-         self.ox = -8
-      else
-         self.ox = 8
-      end
-      if self.y <= scroll or self.y > scroll + 300 then self.die = true end
-   end,
-
-   draw = function (self)
       self.flip = self.dir > 0
+      self.ox = self.flip and -8 or 8
+      if self.y <= scroll or self.y > scroll + 300 then self.die = true end
    end,
 
    collide = function (self) end
