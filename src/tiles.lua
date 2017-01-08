@@ -26,20 +26,20 @@ local bind = function (x, y, actor)
    binds[y][x] = actor
 end
 
-local gen_row = function (row, scroll)
+local gen_row = function (row)
    sand[row] = {}
-   for i = 0,15 do sand[row][i] = math.min(binom_rng(scroll / 400), 2)+1 end
+   for i = 0,15 do sand[row][i] = math.min(binom_rng(row / 50), 2)+1 end
 
    -- Rocks, 2
-   local num_rocks = binom_rng(math.min(scroll*(1/256)+1, 8))
+   local num_rocks = binom_rng(math.min(row/16+1, 8))
    for _ = 1,num_rocks do sand[row][rng(15)] = 5 end
 
    -- Gaps, 0
-   local num_gaps = binom_rng(math.min(scroll*(1/256)+2, 5))
+   local num_gaps = binom_rng(math.min(row/16+2, 5))
    for _ = 1,num_gaps do sand[row][rng(15)] = 0 end
 
    -- Sometimes make big rocks, 9 10 11 12
-   if binom_rng(math.min(scroll / 128), 18) > 10 then
+   if binom_rng(math.min(row / 8), 18) > 10 then
       local x = rng(14)+1 -- Find a valid x pos
       if sand[row][x] < 2 -- Check if usable spaces
          and sand[row][x-1] < 2
@@ -54,23 +54,24 @@ local gen_row = function (row, scroll)
    end
 
    -- Gems, 3 4 5
-   local random_x = rng(15)
-   if math.random() < 1/4 and sand[row] and sand[row][random_x]>0 then
-      if math.random() < 1/2 then
-         local gem = {
-            x=random_x*16, y=row*16,
-            kind=math.min(2, math.floor(math.random() * scroll / 400))
-         }
-         actors.add(require "actors/gem", gem)
-         bind(random_x, row, gem)
-      else
-         local slug = {
-            x=random_x*16, y=row*16,
-         }
-         actors.add(require "actors/slug", slug)
-      end
+   local gem_x = rng(15)
+   if math.random() < 1/8 and sand[row] and sand[row][gem_x]>0 then
+      local gem = {
+         x=gem_x*16, y=row*16,
+         kind=math.min(2, math.floor(math.random() * row / 50))
+      }
+      actors.add(require "actors/gem", gem)
+      bind(gem_x, row, gem)
    end
-
+   local slug_x = rng(15)
+   if math.random() < row / 1000 + 1/10
+      and sand[row] and sand[row][slug_x]<5
+   then
+      local slug = {
+         x=slug_x*16, y=row*16,
+      }
+      actors.add(require "actors/slug", slug)
+   end
 end
 
 local draw_tile = function(x, y)
