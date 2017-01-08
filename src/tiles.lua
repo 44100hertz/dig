@@ -28,10 +28,10 @@ end
 
 local gen_row = function (row, scroll)
    sand[row] = {}
-   for i = 0,15 do sand[row][i] = math.min(binom_rng(scroll / 200), 2)+1 end
+   for i = 0,15 do sand[row][i] = math.min(binom_rng(scroll / 400), 2)+1 end
 
    -- Rocks, 2
-   local num_rocks = binom_rng(math.min(scroll*(1/256)+1, 5))
+   local num_rocks = binom_rng(math.min(scroll*(1/256)+1, 8))
    for _ = 1,num_rocks do sand[row][rng(15)] = 5 end
 
    -- Gaps, 0
@@ -55,10 +55,10 @@ local gen_row = function (row, scroll)
 
    -- Gems, 3 4 5
    local gem_x = rng(15)
-   if math.random() < 1/8 and sand[row] and sand[row][gem_x]==1 then
+   if math.random() < 1/8 and sand[row] and sand[row][gem_x]>0 then
       local gem = {
          x=gem_x*16, y=row*16,
-         kind=math.min(2, math.floor(math.random() * scroll / 500))
+         kind=math.min(2, math.floor(math.random() * scroll / 400))
       }
       actors.add(require "actors/gem", gem)
       bind(gem_x, row, gem)
