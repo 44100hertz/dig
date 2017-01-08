@@ -1,7 +1,7 @@
 local tiles = require "tiles"
 
 return {
-   hbox={y=-4, w=6, h=2},
+   hbox={y=-4, w=4, h=2},
    group="enemy",
    priority = true,
    fx=0, fy=11,
@@ -33,7 +33,11 @@ return {
          end
       end
       self.dx = self.falling and 0 or self.dir
-      if self.flip then self.hbox.x = -8 else self.hbox.x = 8 end
+      if self.flip then
+         self.ox = -8
+      else
+         self.ox = 8
+      end
       if self.y <= scroll or self.y > scroll + 300 then self.die = true end
    end,
 
