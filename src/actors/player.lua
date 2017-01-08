@@ -20,7 +20,7 @@ act = function (self)
    elseif input.hit("a") then
       enter(self, jump)
    elseif
-      input.hit("dd") and
+      input.held("dd") and
       self.dx == 0 and
       self.state ~= charge
    then
