@@ -37,7 +37,7 @@ move = function (self)
       bool2num(input.held("dl"))
 
    -- Do not allow collisions with rocks
-   if tiles.collide(self.x + new_dx, self.y-1)>1 then
+   if tiles.collide(self.x + new_dx, self.y-1)>4 then
       self.dx = 0
       return
    end
@@ -112,7 +112,7 @@ air = function (self)
    self.fx = 4 + math.floor(self.timer * self.spin_speed % 12)
    self.fy = 6
    self.sy = 1
-   if tiles.collide(self.x + self.dx, self.y-8)>1 and self.dy < 0 then
+   if tiles.collide(self.x + self.dx, self.y-8)>4 and self.dy < 0 then
       self.dy = -self.dy
       local bonk = {
          x=self.x-8, y=self.y-8,

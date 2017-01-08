@@ -32,7 +32,7 @@ local gen_row = function (row, scroll)
 
    -- Rocks, 2
    local num_rocks = binom_rng(math.min(scroll*(1/256)+1, 5))
-   for _ = 1,num_rocks do sand[row][rng(15)] = 2 end
+   for _ = 1,num_rocks do sand[row][rng(15)] = 5 end
 
    -- Gaps, 0
    local num_gaps = binom_rng(math.min(scroll*(1/256)+2, 5))
@@ -70,7 +70,11 @@ local draw_tile = function(x, y)
    local tx, ty = x*16, y*16
    if s == 1 then -- Sand
       draw.add(x%2, y%2, tx, ty)
-   elseif s == 2 then -- Rock
+   elseif s == 2 then
+      draw.add(x%2, y%2+2, tx, ty)
+   elseif s == 3 then
+      draw.add(x%2, y%2+4, tx, ty)
+   elseif s == 5 then -- Rock
       draw.add(4, 0, tx, ty)
    elseif s == 9 then -- Big rock
       draw.add(5, 0, tx, ty)
@@ -103,7 +107,7 @@ return {
       for y = tile_off,tile_off+11 do
          if sand[y] then
             for x = 0,15 do
-               draw_tile(x, y)
+               draw_tile(x, y, scroll)
             end
          end
       end
@@ -116,7 +120,7 @@ return {
          sound.play("dig2")
          local particle = { x=x*16, y=y*16, fy=0 }
          actors.add(require "actors/particle", particle)
-      elseif sand[y][x] > 1 then
+      elseif sand[y][x] > 4 then
          -- play rock breaking sound
          -- spawn rock particles
          for _ = 1,10 do
