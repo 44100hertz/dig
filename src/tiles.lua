@@ -58,7 +58,7 @@ local gen_row = function (row, scroll)
    if math.random() < 1/8 and sand[row] and sand[row][gem_x]==1 then
       local gem = {
          x=gem_x*16, y=row*16,
-         kind=math.min(2, math.floor(math.random() * scroll / 200))
+         kind=math.min(2, math.floor(math.random() * scroll / 500))
       }
       actors.add(require "actors/gem", gem)
       bind(gem_x, row, gem)
