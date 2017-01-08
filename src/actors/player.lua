@@ -121,7 +121,7 @@ air = function (self)
       actors.add(require "actors/particle", bonk)
    end
    if self.tileon>0 and self.y % 16 < 3 and
-      tiles.collide(self.x, self.y-16)<2 and self.dy > 0
+      tiles.collide(self.x, self.y-16)<5 and self.dy > 0
    then
       -- If on potential ledge top not below a rock, and falling, land
       enter(self, floor)
