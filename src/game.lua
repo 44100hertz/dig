@@ -35,7 +35,9 @@ return {
       tiles.update(scroll)
       actors.update(scroll)
 
-      local ghost_chance = math.min(0.01, scroll * (1/100000))
+       -- ghosts per frame per scroll
+      local ghost_chance_ratio = 1 / (16 * 60 * 400)
+      local ghost_chance = scroll * ghost_chance_ratio
       if math.random() < ghost_chance then
          local ghost_side = math.random()*120 + player.x > 180
          local ghost_y = math.random()*160 + 40 + scroll
