@@ -23,7 +23,7 @@ return {
       scroll = -40
       actors.init()
       tiles.init()
-      player = {x = 120, y = 0}
+      player = {x = 120, y = -40}
       actors.add(require "actors/player", player)
       points = 0
    end,
