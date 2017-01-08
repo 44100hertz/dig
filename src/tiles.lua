@@ -54,15 +54,23 @@ local gen_row = function (row, scroll)
    end
 
    -- Gems, 3 4 5
-   local gem_x = rng(15)
-   if math.random() < 1/8 and sand[row] and sand[row][gem_x]>0 then
-      local gem = {
-         x=gem_x*16, y=row*16,
-         kind=math.min(2, math.floor(math.random() * scroll / 400))
-      }
-      actors.add(require "actors/gem", gem)
-      bind(gem_x, row, gem)
+   local random_x = rng(15)
+   if math.random() < 1/4 and sand[row] and sand[row][random_x]>0 then
+      if math.random() < 1/2 then
+         local gem = {
+            x=random_x*16, y=row*16,
+            kind=math.min(2, math.floor(math.random() * scroll / 400))
+         }
+         actors.add(require "actors/gem", gem)
+         bind(random_x, row, gem)
+      else
+         local slug = {
+            x=random_x*16, y=row*16,
+         }
+         actors.add(require "actors/slug", slug)
+      end
    end
+
 end
 
 local draw_tile = function(x, y)
