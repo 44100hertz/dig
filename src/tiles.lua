@@ -64,7 +64,7 @@ local gen_row = function (row)
       bind(gem_x, row, gem)
    end
    local slug_x = rng(15)
-   if math.random() < row / 1000 + 1/10
+   if row > 5 and math.random() < row / 1000 + 1/10
       and sand[row] and sand[row][slug_x]<5
    then
       local slug = {
