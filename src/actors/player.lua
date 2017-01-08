@@ -4,27 +4,27 @@ local sound = require "sound"
 local state = require "state"
 local input = require "input"
 
-local loadstate = function (self, state)
+local enter = function (self, state)
    self.timer = 1
    self.state = state
    self:state()
 end
 
-local act, move, exit
+local act, move
 local jump, floor, air, dig, charge, crack, dead
 
 act = function (self)
    if input.hit("b") then
       sound.play("dig1")
-      loadstate(self, dig)
+      enter(self, dig)
    elseif input.hit("a") then
-      loadstate(self, jump)
+      enter(self, jump)
    elseif
       input.hit("dd") and
       self.dx == 0 and
       self.state ~= charge
    then
-      loadstate(self, charge)
+      enter(self, charge)
    end
 end
 
@@ -45,29 +45,19 @@ move = function (self)
    -- Spawn movement particles
    if self.dx > -1 and new_dx == -1 and self.tileon == 1 then
       local sand = {
-         fy=2, flip=false,
+         fy=2, flip=false, dx=0.5,
          x=self.x+4, y=self.y-8,
       }
       actors.add(require "actors/particle", sand)
    elseif self.dx < 1 and new_dx == 1 and self.tileon == 1 then
       local sand = {
-         fy=2, flip=true,
+         fy=2, flip=true, dx=-0.5,
          x=self.x-4, y=self.y-8,
       }
       actors.add(require "actors/particle", sand)
    end
 
    self.dx = new_dx
-end
-
-exit = function (self)
-   if self.tileon == 0 then
-      self.spin_speed = 1
-      loadstate(self, air)
-      self.y = self.y + 2
-   else
-      loadstate(self, floor)
-   end
 end
 
 -- Lag state before a jump
@@ -77,7 +67,7 @@ jump = function (self)
       move(self)
       self.dy = -3
       self.spin_speed = 0.5
-      loadstate(self, air)
+      enter(self, air)
    end
 end
 
@@ -93,7 +83,7 @@ floor = function (self)
       if self.tileon == 1 then
          local sand = {
             fy=1,
-            x=self.x-8, y=self.y-8,
+            x=self.x-8, y=self.y-6,
          }
          actors.add(require "actors/particle", sand)
       end
@@ -108,7 +98,7 @@ floor = function (self)
    -- If not actually grounded, enter air state
    if self.tileon == 0 then
       self.spin_speed = 1
-      loadstate(self, air)
+      enter(self, air)
       return
    end
 
@@ -130,11 +120,11 @@ air = function (self)
       }
       actors.add(require "actors/particle", bonk)
    end
-   if self.y % 16 < 2 and self.tileon > 0 and
+   if self.tileon>0 and self.y % 16 < 3 and
       tiles.collide(self.x, self.y-16)<2 and self.dy > 0
    then
       -- If on potential ledge top not below a rock, and falling, land
-      loadstate(self, floor)
+      enter(self, floor)
    else
       -- If still in air
       move(self)
@@ -151,7 +141,7 @@ dig = function (self)
       self.fy = 7
       self.sy = 2
    else
-      exit(self)
+      enter(self, floor)
    end
    if self.timer == 9 then
       if self.tileon == 1 then
@@ -171,7 +161,7 @@ crack = function (self)
    elseif self.timer == 32 then
       self.fx = 15
    elseif self.timer == 34 then
-      exit(self)
+      enter(self, floor)
    end
 end
 
@@ -179,12 +169,12 @@ charge = function (self)
    self.fy = 7
    self.sy = 2
    if not input.held("dd") then
-      loadstate(self, floor)
+      enter(self, floor)
    end
    if self.timer > 30 then
       self.fx = math.floor(self.timer / 8.0 % 2) + 10
       if input.hit("b") then
-         loadstate(self, crack)
+         enter(self, crack)
       end
    else
       self.fx = 9
@@ -227,7 +217,7 @@ return {
 
    collide = function (self, with)
       if self.state ~= dead then
-         loadstate(self, dead)
+         enter(self, dead)
       end
    end
 }
