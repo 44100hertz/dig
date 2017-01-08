@@ -1,6 +1,6 @@
 ** DONE fix gem spawning on big rocks
-** TODO rectangular collisions
-** TODO use all sands
+** DONE fix collisions
+** DONE use all sands
 ** DONE fix slipping thru rocks
 ** TODO walkin enemy
 ** DONE prevent stuck, ungettable gems

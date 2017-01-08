@@ -3,9 +3,14 @@ local draw = require "draw"
 local actors
 
 local collide = function (a, b)
-   if a.size and b.size then
-      local sq = function (x) return x*x end
-      if sq(a.size + b.size) > sq(a.x-b.x) + sq(a.y-b.y) then
+   if a.hbox and b.hbox then
+      local w = a.hbox.w + b.hbox.w
+      local h = a.hbox.h + b.hbox.h
+      local ax = a.x + (a.hbox.x or 0)
+      local ay = a.y + (a.hbox.y or 0)
+      local bx = b.x + (b.hbox.x or 0)
+      local by = b.y + (b.hbox.y or 0)
+      if w > math.abs(ax - bx) and h > math.abs(ay - by) then
          a:collide(b)
          b:collide(a)
       end

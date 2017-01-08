@@ -200,7 +200,7 @@ dead = function (self)
 end
 
 return {
-   size = 4,
+   hbox={y=-4, w=4, h=2},
    group = "player",
    priority = true,
    sx=1, sy=1,

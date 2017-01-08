@@ -1,5 +1,5 @@
 return {
-   size = 3,
+   hbox={w=1.5, h=4},
    group = "enemy",
    priority = 1,
    init = function (self)
