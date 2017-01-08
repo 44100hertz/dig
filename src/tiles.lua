@@ -28,7 +28,7 @@ end
 
 local gen_row = function (row, scroll)
    sand[row] = {}
-   for i = 0,15 do sand[row][i] = 1 end
+   for i = 0,15 do sand[row][i] = math.min(binom_rng(scroll / 200), 2)+1 end
 
    -- Rocks, 2
    local num_rocks = binom_rng(math.min(scroll*(1/256)+1, 5))
@@ -116,9 +116,9 @@ return {
    destroy = function (x, y)
       x = math.floor(x / 16)
       y = math.floor(y / 16)
-      if sand[y][x] == 1 then
+      if sand[y][x] > 0 and sand[y][x] < 5 then
          sound.play("dig2")
-         local particle = { x=x*16, y=y*16, fy=0 }
+         local particle = { x=x*16, y=y*16, fy=0, lifetime=20 }
          actors.add(require "actors/particle", particle)
       elseif sand[y][x] > 4 then
          -- play rock breaking sound

@@ -144,7 +144,7 @@ dig = function (self)
       enter(self, floor)
    end
    if self.timer == 9 then
-      if self.tileon == 1 then
+      if self.tileon > 0 and self.tileon < 5 then
          tiles.destroy(self.x, self.y)
       end
    end
