@@ -29,6 +29,9 @@ return {
             self.x + self.dir < 0 or self.x + self.dir > 240
          then
             self.dir = -self.dir
+            if tiles.collide(self.x + self.dir, self.y - 8) > 4 then
+               self.die = true
+            end
          end
       end
       self.dx = self.falling and 0 or self.dir
@@ -37,5 +40,5 @@ return {
       if self.y <= scroll or self.y > scroll + 300 then self.die = true end
    end,
 
-   collide = function (self) end
+   collide = function () end
 }
