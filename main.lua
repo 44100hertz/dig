@@ -26,11 +26,12 @@ love.run = function ()
          love.handlers[name](a,b,c,d,e,f)
       end
 
-      love.graphics.setBlendMode("alpha", "alphamultiply")
       state.update()
       canvas:renderTo(state.draw)
       love.graphics.setBlendMode("replace", "premultiplied")
       love.graphics.draw(canvas, 0, 0, 0, 3, 3)
+      love.graphics.setBlendMode("alpha", "alphamultiply")
+      love.graphics.print(collectgarbage("count"), 200, 5)
       love.graphics.present()
 
       input.update()
