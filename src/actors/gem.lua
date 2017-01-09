@@ -1,6 +1,5 @@
 local game = require "game"
 local actors = require "actors"
-local draw = require "draw"
 
 local pts = {
    [0] = {10, 30},

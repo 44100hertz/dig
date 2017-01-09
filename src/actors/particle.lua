@@ -1,5 +1,3 @@
-local draw = require "draw"
-
 return {
    ddy = 0,
    lifetime = 12,
@@ -17,9 +15,6 @@ return {
    update = function (self)
       if self.timer == self.lifetime-1 then self.die = true end
       self.dy = self.dy + self.ddy
-   end,
-
-   draw = function (self)
       self.fx = math.floor(self.timer / self.lifetime * 3) + 7
    end,
 }

@@ -107,11 +107,11 @@ return {
       -- If sand are offscreen, generate more
       if not sand[maxoff] then
          sand[tile_off-1] = nil
-         gen_row(maxoff, scroll)
+         gen_row(maxoff)
       end
    end,
 
-   draw = function ()
+   draw = function (scroll)
       -- Draw 11 rows of sand; max possible visible
       for y = tile_off,tile_off+11 do
          if sand[y] then

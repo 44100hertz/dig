@@ -4,9 +4,9 @@ local sound = require "sound"
 local state = require "state"
 local input = require "input"
 
-local enter = function (self, state)
+local enter = function (self, new_state)
    self.timer = 1
-   self.state = state
+   self.state = new_state
    self:state()
 end
 
@@ -217,7 +217,7 @@ return {
       self.x = math.min(self.x, 240)
    end,
 
-   collide = function (self, with)
+   collide = function (self)
       if self.state ~= dead then
          enter(self, dead)
       end
