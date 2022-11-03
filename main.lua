@@ -4,7 +4,7 @@ local state = require "state"
 local game = require "game"
 local input = require "input"
 
-love.window.setMode(240*3, 160*3)
+love.window.setMode(240*5, 160*5)
 
 local lastf
 
@@ -29,7 +29,7 @@ love.run = function ()
       state.update()
       canvas:renderTo(state.draw)
       love.graphics.setBlendMode("replace", "premultiplied")
-      love.graphics.draw(canvas, 0, 0, 0, 3, 3)
+      love.graphics.draw(canvas, 0, 0, 0, 5, 5)
       love.graphics.setBlendMode("alpha", "alphamultiply")
       love.graphics.print(collectgarbage("count"), 200, 5)
       love.graphics.present()

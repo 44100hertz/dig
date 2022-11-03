@@ -46,7 +46,7 @@ return {
    end,
 
    draw = function ()
-      love.graphics.clear(25, 25, 25)
+      love.graphics.clear(0,0,0)
       love.graphics.draw(bg_canvas, bg_quad, 0, math.floor(-scroll * 0.5) % 32 - 32)
       tiles.draw(scroll)
       actors.draw()

@@ -7,7 +7,7 @@ local chans = {}
 
 for k,v in ipairs(soundlist) do
    local path = string.format("sound/%s.wav", v)
-   sounds[v] = love.audio.newSource(path)
+   sounds[v] = love.audio.newSource(path, 'static')
 end
 
 return {
