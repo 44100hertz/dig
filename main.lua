@@ -1,3 +1,4 @@
+love.graphics.setDefaultFilter("nearest", "nearest")
 love.filesystem.setRequirePath("src/?.lua")
 
 local state = require "state"
@@ -8,41 +9,29 @@ love.window.setMode(240*5, 160*5)
 
 local lastf
 
-love.run = function ()
-   love.math.setRandomSeed(os.time())
+function love.load ()
    state.push(game)
+end
 
-   love.graphics.setDefaultFilter("nearest", "nearest")
-   local canvas = love.graphics.newCanvas(240, 160)
-
-   while true do
-      love.event.pump()
-      for name, a,b,c,d,e,f in love.event.poll() do
-         if name == "quit" then
-            if not love.quit or not love.quit() then
-               return a
-            end
-         end
-         love.handlers[name](a,b,c,d,e,f)
+function love.update ()
+   input.update()
+   state.update()
+   local f = love.keyboard.isScancodeDown("f")
+   if f and not lastf then
+      if love.window.getFullscreen() == true then
+         love.window.setFullscreen(false)
+      else
+         love.window.setFullscreen(true)
       end
-
-      state.update()
-      canvas:renderTo(state.draw)
-      love.graphics.setBlendMode("replace", "premultiplied")
-      love.graphics.draw(canvas, 0, 0, 0, 5, 5)
-      love.graphics.setBlendMode("alpha", "alphamultiply")
-      love.graphics.print(collectgarbage("count"), 200, 5)
-      love.graphics.present()
-
-      input.update()
-      local f = love.keyboard.isScancodeDown("f")
-      if f and not lastf then
-         if love.window.getFullscreen() == true then
-            love.window.setFullscreen(false)
-         else
-            love.window.setFullscreen(true)
-         end
-      end
-      lastf = f
    end
+   lastf = f
+   love.graphics.print(collectgarbage("count"), 200, 5)
+end
+
+function love.draw ()
+   love.graphics.push()
+   love.graphics.setBlendMode("alpha", "alphamultiply")
+   love.graphics.scale(5, 5)
+   state.draw()
+   love.graphics.pop()
 end
