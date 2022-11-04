@@ -19,7 +19,6 @@ return {
             assets_width, assets_height
          )
       end
-      draw_x, draw_y = math.floor(draw_x), math.floor(draw_y)
       local d = double and 2 or 1
       sb:add(quads[y][x], draw_x, draw_y, 0, flip and -d or d, d)
    end,
