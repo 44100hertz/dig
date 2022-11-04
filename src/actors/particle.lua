@@ -6,7 +6,7 @@ return {
          self.dy = -1
       elseif self.fy == 4 then -- broke rock
          self.dx = math.random()*6 - 3
-         self.dy = -(math.random()+1) * 4
+         self.dy = -(math.random()+1) * 4 + 1
          self.ddy = 0.25
          self.lifetime = 80
       end

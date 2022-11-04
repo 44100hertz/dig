@@ -12,53 +12,54 @@ local points
 bg_canvas = love.graphics.newCanvas(32, 32)
 bg_canvas:setWrap("repeat", "repeat")
 
-return {
-   init = function ()
-      title_freeze = true
-      bg_canvas:renderTo(function ()
-            local quad = love.graphics.newQuad(32, 32, 32, 32,
-                                               draw.img:getDimensions())
-            love.graphics.draw(draw.img, quad)
-      end)
-      bg_quad = love.graphics.newQuad(0, 0, 240, 160+32, 32, 32)
+local game = {}
 
-      scroll = -240
-      actors.init()
-      tiles.init()
-      player = {x = 120, y = -40}
-      actors.add(require "actors/player", player)
-      points = 0
-   end,
+function game.init ()
+   title_freeze = true
+   bg_canvas:renderTo(function ()
+         local quad = love.graphics.newQuad(32, 32, 32, 32,
+                                            draw.img:getDimensions())
+         love.graphics.draw(draw.img, quad)
+   end)
+   bg_quad = love.graphics.newQuad(0, 0, 240, 160+32, 32, 32)
 
-   update = function ()
-      if title_freeze then
-         title_freeze = not love.keyboard.isScancodeDown('return')
-         return
-      end
-      if scroll > 0 then
-         points = points + (-dscroll * 10 / 16)
-      end
-      dscroll = (scroll < player.y-81 or scroll % 16 > 0) and -1 or 0
-      scroll = scroll - dscroll
-      tiles.update(scroll)
-      actors.update(scroll)
+   scroll = -240
+   actors.init()
+   tiles.init()
+   player = {x = 120, y = -40}
+   actors.add(require "actors/player", player)
+   points = 0
+end
 
-       -- ghosts per frame per scroll
-      local ghost_chance_ratio = 1 / (16 * 60 * 400)
-      local ghost_chance = scroll * ghost_chance_ratio
-      if math.random() < ghost_chance then
-         local ghost_side = math.random()*120 + player.x > 180
-         local ghost_y = math.random()*160 + 40 + scroll
-         actors.add(require "actors/ghost", {y=ghost_y, left=ghost_side})
-      end
-   end,
+function game.update ()
+   if title_freeze then
+      title_freeze = not love.keyboard.isScancodeDown('return')
+      return
+   end
+   if scroll >= 0 then
+      points = points + (-dscroll * 10 / 16)
+   end
+   dscroll = (scroll < player.y-81 or scroll % 16 > 0) and -1 or 0
+   scroll = scroll - dscroll
+   tiles.update(scroll)
+   actors.update(scroll)
 
-   draw = function ()
+   -- ghosts per frame per scroll
+   local ghost_chance_ratio = 1 / (16 * 60 * 400)
+   local ghost_chance = scroll * ghost_chance_ratio
+   if math.random() < ghost_chance then
+      local ghost_side = math.random()*120 + player.x > 180
+      local ghost_y = math.random()*160 + 40 + scroll
+      actors.add(require "actors/ghost", {y=ghost_y, left=ghost_side})
+   end
+end
+
+function game.draw ()
       love.graphics.clear(0,0,0)
       love.graphics.draw(bg_canvas, bg_quad, 0, math.floor(-scroll * 0.5) % 32 - 32)
       tiles.draw(scroll)
       actors.draw()
-      status.draw(math.floor(points)+5, 10, 0, 5, scroll + 5)
+      status.draw(math.floor(points), 10, 0, 5, scroll + 5)
       if (scroll < 100) then
          draw.add(8, 9, 24, -210, 6, 3, false, true)
          if love.timer.getTime() % 1 < 0.5 then
@@ -67,9 +68,10 @@ return {
          draw.add(10, 2, 82, -64, 6, 3)
       end
       draw.draw(0, -scroll)
-   end,
+end
 
-   score = function (amt)
-      points = points + amt
-   end,
-}
+function game.score (amt)
+   points = points + amt
+end
+
+return game
