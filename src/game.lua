@@ -7,12 +7,14 @@ local player
 
 local scroll, dscroll
 local bg_canvas, bg_quad
+local controls_quad
 local points
 bg_canvas = love.graphics.newCanvas(32, 32)
 bg_canvas:setWrap("repeat", "repeat")
 
 return {
    init = function ()
+      title_freeze = true
       bg_canvas:renderTo(function ()
             local quad = love.graphics.newQuad(32, 32, 32, 32,
                                                draw.img:getDimensions())
@@ -20,7 +22,7 @@ return {
       end)
       bg_quad = love.graphics.newQuad(0, 0, 240, 160+32, 32, 32)
 
-      scroll = -40
+      scroll = -240
       actors.init()
       tiles.init()
       player = {x = 120, y = -40}
@@ -29,9 +31,15 @@ return {
    end,
 
    update = function ()
+      if title_freeze then
+         title_freeze = not love.keyboard.isScancodeDown('return')
+         return
+      end
+      if scroll > 0 then
+         points = points + (-dscroll * 10 / 16)
+      end
       dscroll = (scroll < player.y-81 or scroll % 16 > 0) and -1 or 0
       scroll = scroll - dscroll
-      points = points + (-dscroll * 10 / 16)
       tiles.update(scroll)
       actors.update(scroll)
 
@@ -51,6 +59,13 @@ return {
       tiles.draw(scroll)
       actors.draw()
       status.draw(math.floor(points)+5, 10, 0, 5, scroll + 5)
+      if (scroll < 100) then
+         draw.add(8, 9, 24, -210, 6, 3, false, true)
+         if love.timer.getTime() % 1 < 0.5 then
+            draw.add(8, 12, 24, -120, 6, 1)
+         end
+         draw.add(10, 2, 82, -64, 6, 3)
+      end
       draw.draw(0, -scroll)
    end,
 

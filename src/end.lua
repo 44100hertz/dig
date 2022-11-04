@@ -10,7 +10,7 @@ return {
 
    update = function ()
       timer = timer + 1
-      if input.hit("a") or input.hit("b") then
+      if input.hit("a") or input.hit("b") or timer == 120 then
          state.pop()
          state.push(require "game")
       end
