@@ -22,6 +22,7 @@ local draw_one = function (v)
    if v.fx then
       local ox = v.ox or 0
       local oy = v.oy or 0
+      if v.flip then ox = -ox end
       draw.add(v.fx, v.fy, v.x-ox, v.y-oy, v.sx, v.sy, v.flip)
    end
 end
