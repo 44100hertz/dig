@@ -26,6 +26,7 @@ function game.init ()
    scroll = -240
    actors.init()
    tiles.init()
+   status:init()
    player = {x = 120, y = -40}
    actors.add(require "actors/player", player)
    points = 0
@@ -59,15 +60,17 @@ function game.draw ()
       love.graphics.draw(bg_canvas, bg_quad, 0, math.floor(-scroll * 0.5) % 32 - 32)
       tiles.draw(scroll)
       actors.draw()
-      status.draw(math.floor(points), 10, 0, 5, scroll + 5)
       if (scroll < 100) then
-         draw.add(8, 9, 24, -210, 6, 3, false, true)
+         -- Title
+         draw.add(10, 9, 24, -210, 6, 3, false, true)
          if love.timer.getTime() % 1 < 0.5 then
-            draw.add(8, 12, 24, -120, 6, 1)
+            -- enter prompt
+            draw.add(10, 12, 24, -120, 6, 1)
          end
          draw.add(10, 2, 82, -64, 6, 3)
       end
       draw.draw(0, -scroll)
+      status:draw(points, player.y / 16)
 end
 
 function game.score (amt)
