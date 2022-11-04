@@ -1,17 +1,16 @@
 return {
-   hbox={w=1.5, h=4},
+   hbox={x=0, y=-2, w=1.5, h=4},
+   ox=4.5,
    group = "enemy",
    priority = 1,
    init = function (self)
       self.oy = 7
       if self.left then
          self.x = -10
-         self.ox = -6
          self.dx = 0.5
          self.flip = true
       else
          self.x = 250
-         self.ox = 6
          self.dx = -0.5
       end
       self.y_origin = self.y

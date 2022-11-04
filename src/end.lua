@@ -1,5 +1,6 @@
 local state = require "state"
 local input = require "input"
+local status = require "status"
 
 local timer
 
@@ -20,5 +21,7 @@ return {
       love.graphics.setBlendMode("multiply", "premultiplied")
       love.graphics.setColor(0.99, 0.99, 0.99)
       love.graphics.rectangle("fill",0,0,240,160)
+      love.graphics.setBlendMode("alpha", "premultiplied")
+      status:draw()
    end,
 }

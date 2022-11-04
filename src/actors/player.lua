@@ -202,7 +202,7 @@ dead = function (self)
 end
 
 return {
-   hbox={y=-4, w=4, h=2},
+   hbox={x=-2, y=-4, w=5, h=2},
    group = "player",
    priority = true,
    sx=1, sy=1,

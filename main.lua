@@ -7,6 +7,8 @@ local input = require "input"
 
 love.window.setMode(240*5, 160*5)
 
+_G.DEBUG = true
+
 local lastf
 
 function love.load ()

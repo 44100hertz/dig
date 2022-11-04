@@ -69,7 +69,15 @@ function game.draw ()
          end
          draw.add(10, 2, 82, -64, 6, 3)
       end
+
+      love.graphics.push()
+      love.graphics.translate(0, -scroll)
       draw.draw(0, -scroll)
+      if _G.DEBUG then
+         actors.draw_hitboxes()
+      end
+      love.graphics.pop()
+
       status:draw(points, player.y / 16)
 end
 

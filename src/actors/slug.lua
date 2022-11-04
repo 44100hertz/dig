@@ -1,11 +1,11 @@
 local tiles = require "tiles"
 
 local slug = {
-   hbox={y=-4, w=4, h=2},
+   hbox={x=-0.5, y=-3, w=1, h=3},
    group="enemy",
    priority = true,
    fx=0, fy=11,
-   ox=8, oy=15,
+   ox=4, oy=15,
 }
 
 function slug:init()
@@ -21,6 +21,7 @@ function slug:update (scroll)
    if self.turnaround then
       self.dx = 0
       self.fx = 8
+      self.ox = 8
       local t = self.turnaround
       self.turnaround = t - 1
       self.flip = (t > 2 and self.dir > 0) or (t <= 2 and self.dir < 0)
@@ -35,7 +36,10 @@ function slug:update (scroll)
       self.fx = math.floor((self.timer / 4) % 2) + 4
       self.dy = math.min(self.dy + 0.1, 2)
    else
-      self.falling = false
+      if self.falling then
+         if math.random() > 0.6 then self.turnaround = 4 end
+         self.falling = false
+      end
       self.dy = 0
       self.y = math.floor(self.y / 16) * 16
       self.fx = math.floor(self.timer / 4) % 4
