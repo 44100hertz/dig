@@ -26,17 +26,16 @@ function game.init ()
    scroll = -240
    actors.init()
    tiles.init()
-   status:init()
    player = {x = 120, y = -40}
    actors.add(require "actors/player", player)
    points = 0
 end
 
+function game.reset_score ()
+   status:init()
+end
+
 function game.update ()
-   if title_freeze then
-      title_freeze = not love.keyboard.isScancodeDown('return')
-      return
-   end
    if scroll >= 0 then
       points = points + (-dscroll * 10 / 16)
    end
@@ -53,32 +52,38 @@ function game.update ()
       local ghost_y = math.random()*160 + 40 + scroll
       actors.add(require "actors/ghost", {y=ghost_y, left=ghost_side})
    end
+
+   status:update(points, player.y/16)
 end
 
 function game.draw ()
-      love.graphics.clear(0,0,0)
-      love.graphics.draw(bg_canvas, bg_quad, 0, math.floor(-scroll * 0.5) % 32 - 32)
-      tiles.draw(scroll)
-      actors.draw()
-      if (scroll < 100) then
-         -- Title
-         draw.add(10, 9, 24, -210, 6, 3, false, true)
-         if love.timer.getTime() % 1 < 0.5 then
-            -- enter prompt
-            draw.add(10, 12, 24, -120, 6, 1)
-         end
-         draw.add(10, 2, 82, -64, 6, 3)
+   love.graphics.clear(0,0,0)
+   love.graphics.draw(bg_canvas, bg_quad, 0, math.floor(-scroll * 0.5) % 32 - 32)
+   tiles.draw(scroll)
+   actors.draw()
+   if (scroll < 100) then
+      -- Title
+      draw.add(10, 9, 24, -210, 6, 3, false, true)
+      if love.timer.getTime() % 1 < 0.5 then
+         -- enter prompt
+         draw.add(10, 12, 24, -120, 6, 1)
       end
+      draw.add(10, 2, 82, -64, 6, 3)
+   end
 
-      love.graphics.push()
-      love.graphics.translate(0, -scroll)
-      draw.draw(0, -scroll)
-      if _G.DEBUG then
-         actors.draw_hitboxes()
-      end
-      love.graphics.pop()
+   love.graphics.push()
+   love.graphics.translate(0, -scroll)
+   draw.draw(0, -scroll)
+   if _G.DEBUG then
+      actors.draw_hitboxes()
+   end
+   love.graphics.pop()
 
-      status:draw(points, player.y / 16)
+   status:draw(points, player.y / 16)
+end
+
+function game.is_over ()
+   return player:is_dead()
 end
 
 function game.score (amt)

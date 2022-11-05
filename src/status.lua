@@ -4,6 +4,8 @@ local score_h = 5
 local depth_h = 15
 
 local status = {
+   points = 0,
+   depth = 0,
    top_points = 2500,
    top_depth = 200,
 }
@@ -13,12 +15,14 @@ function status:init ()
    self.depth = 0
 end
 
-function status:draw(points, depth)
+function status:update(points, depth)
    self.points = points
    self.depth = math.max(self.depth, depth)
    self.top_points = math.max(points, self.top_points)
    self.top_depth = math.max(depth, self.top_depth)
+end
 
+function status:draw()
    draw.add(10, 0.5, 5, score_h, 2.5, 0.5) -- text 'score'
    self:draw_num(math.floor(self.points), 35, score_h)
    draw.add(12.5, 0.5, 5, depth_h, 2.5, 0.5) -- text 'depth'

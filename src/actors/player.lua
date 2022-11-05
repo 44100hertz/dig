@@ -4,32 +4,38 @@ local sound = require "sound"
 local state = require "state"
 local input = require "input"
 
-local enter = function (self, new_state)
+local player = {
+   hbox={x=-2, y=-4, w=5, h=2},
+   group = "player",
+   priority = true,
+   sx=1, sy=1,
+   ox=8, oy=12,
+   spin_speed = 1,
+}
+
+function player:enter_state (name)
    self.timer = 1
-   self.state = new_state
+   self.state = self[name]
    self:state()
 end
 
-local act, move
-local jump, floor, air, dig, charge, crack, dead
-
-act = function (self)
+function player:act ()
    if input.hit("b") then
       sound.play("dig1")
-      enter(self, dig)
+      self:enter_state "dig"
    elseif input.hit("a") then
-      enter(self, jump)
+      self:enter_state "jump"
    elseif
       input.held("dd") and
       self.dx == 0 and
-      self.state ~= charge
+      self.state ~= self.charge
    then
-      enter(self, charge)
+      self:enter_state "charge"
    end
 end
 
 -- General function for movement
-move = function (self)
+function player:move ()
    -- Set a sort of goal position
    local bool2num = function (bool) return bool and 1 or 0 end
    local new_dx =
@@ -61,18 +67,18 @@ move = function (self)
 end
 
 -- Lag state before a jump
-jump = function (self)
+function player:jump ()
    self.dx = 0
    if self.timer == 4 then
-      move(self)
+      self:move()
       self.dy = -3
       self.spin_speed = 0.5
-      enter(self, air)
+      self:enter_state "air"
    end
 end
 
 -- Grounded
-floor = function (self)
+function player:floor ()
    -- Hitting ground
    if self.timer == 1 then
       self.fy = 6
@@ -95,20 +101,20 @@ floor = function (self)
    else self.fx = 0
    end
 
-   -- If not actually grounded, enter air state
+   -- If not actually grounded, enter_state air state
    if self.tileon == 0 then
       self.spin_speed = 1
-      enter(self, air)
+      self:enter_state "air"
       return
    end
 
    -- User input
-   move(self)
-   act(self)
+   self:move()
+   self:act()
 end
 
 -- In-air falling state
-air = function (self)
+function player:air ()
    self.fx = 4 + math.floor(self.timer * self.spin_speed % 12)
    self.fy = 6
    self.sy = 1
@@ -126,16 +132,16 @@ air = function (self)
       tiles.collide(self.x, self.y-16)<5 and self.dy > 0
    then
       -- If on potential ledge top not below a rock, and falling, land
-      enter(self, floor)
+      self:enter_state "floor"
    else
       -- If still in air
-      move(self)
+      self:move()
       self.dy = math.min(self.dy + 1/4, 2)
    end
 end
 
 -- Attempt to dig a tile below
-dig = function (self)
+function player:dig ()
    self.dx = 0
    if self.timer < 15 then
       local anim = {0,0,1,2,3,3,3,4,5,5,5,6,7,8,0}
@@ -143,7 +149,7 @@ dig = function (self)
       self.fy = 7
       self.sy = 2
    else
-      enter(self, floor)
+      self:enter_state "floor"
    end
    if self.timer == 9 then
       if self.tileon > 0 and self.tileon < 5 then
@@ -152,7 +158,7 @@ dig = function (self)
    end
 end
 
-crack = function (self)
+function player:crack ()
    if self.timer == 1 then
       self.fx = 12
    elseif self.timer == 4 then
@@ -163,27 +169,27 @@ crack = function (self)
    elseif self.timer == 32 then
       self.fx = 15
    elseif self.timer == 34 then
-      enter(self, floor)
+      self:enter_state "floor"
    end
 end
 
-charge = function (self)
+function player:charge ()
    self.fy = 7
    self.sy = 2
    if not input.held("dd") then
-      enter(self, floor)
+      self:enter_state "floor"
    end
    if self.timer > 30 then
       self.fx = math.floor(self.timer / 8.0 % 2) + 10
       if input.hit("b") then
-         enter(self, crack)
+         self:enter_state "crack"
       end
    else
       self.fx = 9
    end
 end
 
-dead = function (self)
+function player:dead ()
    self.sy = 1
    self.dx = 0
    if self.tileon == 0 then
@@ -194,32 +200,28 @@ dead = function (self)
       self.dy = 0
       self.fx = math.floor(self.timer / 4.0)
       self.fy = 9
-   elseif self.timer == 120 then
-      state.push(require "end")
    else
       self.fx = math.floor((self.timer / 4.0) % 2) + 5
    end
 end
 
-return {
-   hbox={x=-2, y=-4, w=5, h=2},
-   group = "player",
-   priority = true,
-   sx=1, sy=1,
-   ox=8, oy=12,
-   spin_speed = 1,
-   state = air,
+function player:is_dead ()
+   return self.state == self.dead and self.timer >= 120
+end
 
-   update = function (self)
-      self.tileon = tiles.collide(self.x, self.y)
-      self:state()
-      self.x = math.max(self.x, 1)
-      self.x = math.min(self.x, 240)
-   end,
+function player:update ()
+   self.tileon = tiles.collide(self.x, self.y)
+   self:state()
+   self.x = math.max(self.x, 1)
+   self.x = math.min(self.x, 240)
+end
 
-   collide = function (self)
-      if self.state ~= dead then
-         enter(self, dead)
-      end
+function player:collide ()
+   if self.state ~= self.dead then
+      self:enter_state "dead"
    end
-}
+end
+
+player.state = player.air
+
+return player
