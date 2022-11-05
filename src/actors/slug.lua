@@ -53,7 +53,7 @@ function slug:update (scroll)
    end
    self.dx = self.falling and 0 or self.dir
    self.flip = self.dir > 0
-   if self.y <= scroll or self.y > scroll + 300 then self.die = true end
+   if self.y <= scroll then self.die = true end
 end
 
 function slug:collide()

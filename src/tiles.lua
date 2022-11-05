@@ -3,21 +3,27 @@
 local draw = require "draw"
 local actors = require "actors"
 local sound = require "sound"
+local sections = require "sections"
 
 local sand = {}
 local binds = {}
 local tile_off = 0
+local slug_y
 
 local rng = function (num)
    return math.floor(love.math.random() * num+1) - 1
 end
 
-local binom_rng = function (num)
+function binom ()
    local sum = 0
    for _ = 1,8 do
       sum = sum + math.random()
    end
-   return math.floor(sum * num * (1/8))
+   return sum / 8
+end
+
+local binom_int = function (num)
+   return math.floor(binom() * num)
 end
 
 -- bind an actor to a given space, notify them when destroyed
@@ -27,24 +33,33 @@ local bind = function (x, y, actor)
 end
 
 local gen_row = function (row)
-   sand[row] = {}
-   for i = 0,15 do sand[row][i] = math.min(binom_rng(row / 50), 2)+1 end
+   local section_index = sections.section_index(row)
+   local section = sections[section_index]
 
-   -- Rocks, 2
-   local num_rocks = binom_rng(math.min(row/16+1, 8))
-   for _ = 1,num_rocks do sand[row][rng(15)] = 5 end
+   sand[row] = {}
+   for i = 0,15 do
+      sand[row][i] = math.floor(section_index/2+0.5)
+   end
 
    -- Gaps, 0
-   local num_gaps = binom_rng(math.min(row/16+2, 5))
+   local num_gaps = binom_int(section.gaps)
    for _ = 1,num_gaps do sand[row][rng(15)] = 0 end
 
+   -- Rocks, 2
+   local num_rocks = binom_int(8 * section.rocks)
+   local big_rock = row > 1 and num_rocks >= 4
+   if big_rock then num_rocks = num_rocks - 4 end
+   for _ = 1,num_rocks do
+      sand[row][rng(15)] = 5
+   end
+
    -- Sometimes make big rocks, 9 10 11 12
-   if binom_rng(math.min(row / 8), 18) > 10 then
+   if big_rock then
       local x = rng(14)+1 -- Find a valid x pos
-      if sand[row][x] < 2 -- Check if usable spaces
-         and sand[row][x-1] < 2
-         and sand[row-1][x] < 2
-         and sand[row-1][x-1] < 2
+      if sand[row][x] < 9 -- Check if usable spaces
+         and sand[row][x-1] < 9
+         and sand[row-1][x] < 9
+         and sand[row-1][x-1] < 9
       then
          sand[row-1][x-1] = 9
          sand[row-1][x] = 10
@@ -63,14 +78,19 @@ local gen_row = function (row)
       actors.add(require "actors/gem", gem)
       bind(gem_x, row, gem)
    end
-   local slug_x = rng(15)
-   if row > 5 and math.random() < row / 1000 + 1/10
-      and sand[row] and sand[row][slug_x]<5
-   then
-      local slug = {
-         x=slug_x*16, y=row*16,
-      }
-      actors.add(require "actors/slug", slug)
+
+   -- Generate 1 slug every N rows
+   if row > 5 and row % section.slug_every == 0 then
+      slug_y = rng(section.slug_every) + row
+   end
+   if row == slug_y then
+      local slug_x = rng(15)
+      if sand[row] and sand[row][slug_x]<5 then
+         local slug = {
+            x=slug_x*16, y=row*16,
+         }
+         actors.add(require "actors/slug", slug)
+      end
    end
 end
 

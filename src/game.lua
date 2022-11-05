@@ -2,6 +2,7 @@ local draw = require "draw"
 local tiles = require "tiles"
 local actors = require "actors"
 local status = require "status"
+local sections = require "sections"
 
 local player
 
@@ -45,9 +46,9 @@ function game.update ()
    actors.update(scroll)
 
    -- ghosts per frame per scroll
-   local ghost_chance_ratio = 1 / (16 * 60 * 400)
-   local ghost_chance = scroll * ghost_chance_ratio
-   if math.random() < ghost_chance then
+
+   local section = sections.section(scroll/16)
+   if math.random() < section.ghosts / 90 then
       local ghost_side = math.random()*120 + player.x > 180
       local ghost_y = math.random()*160 + 40 + scroll
       actors.add(require "actors/ghost", {y=ghost_y, left=ghost_side})
