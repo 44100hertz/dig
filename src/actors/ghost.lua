@@ -1,6 +1,6 @@
 return {
    hbox={x=0, y=-2, w=1.5, h=4},
-   ox=4.5,
+   ox=6,
    group = "enemy",
    priority = 1,
    init = function (self)

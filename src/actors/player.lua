@@ -20,7 +20,7 @@ function player:enter_state (name)
 end
 
 function player:act ()
-   if input.hit("b") then
+   if input.held("b") then
       sound.play("dig1")
       self:enter_state "dig"
    elseif input.hit("a") then
