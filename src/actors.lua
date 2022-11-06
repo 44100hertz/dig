@@ -54,6 +54,9 @@ function actors.draw ()
    for _,v in ipairs(actor_list) do
       if v.priority then actors.draw_one(v) end
    end
+   if _G.DEBUG then
+      _G.DEBUG.show('num actors: ' .. #actor_list, 80, 2)
+   end
 end
 
 function actors.draw_one (v)

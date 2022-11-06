@@ -22,6 +22,7 @@ local gen_row = function (row)
    local section = sections[section_index]
 
    sand[row] = {}
+   sand[row-40] = nil
    for i = 0,15 do
       sand[row][i] = math.floor(section_index/2+0.5)
    end
