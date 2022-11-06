@@ -60,8 +60,6 @@ end
 function game.draw ()
    love.graphics.clear(0,0,0)
    love.graphics.draw(bg_canvas, bg_quad, 0, math.floor(-scroll * 0.5) % 32 - 32)
-   tiles.draw(scroll)
-   actors.draw()
    if (scroll < 100) then
       -- Title
       draw.add(10, 9, 24, -210, 6, 3, false, true)
@@ -74,7 +72,12 @@ function game.draw ()
 
    love.graphics.push()
    love.graphics.translate(0, -scroll)
-   draw.draw(0, -scroll)
+   love.graphics.setColor(sections.color(scroll))
+   tiles.draw(scroll)
+   draw.draw()
+   love.graphics.setColor(1,1,1,1)
+   actors.draw()
+   draw.draw()
    if _G.DEBUG then
       actors.draw_hitboxes()
    end

@@ -7,6 +7,12 @@ local sections = {
    {slug_every = 3, ghosts = 0.8, rocks = 1.0, gaps = 5},
 }
 
+function sections.color (row)
+   local r = math.max(0.5, 1 - row / 600)
+   local g = math.max(0.5, 1 - row / 1200)
+   local b = 1.0
+   return r, g, b
+end
 function sections.section_index (row)
    return math.max(1, 1 + math.min(math.floor(row / 40), #sections))
 end
