@@ -19,21 +19,6 @@ function player:enter_state (name)
    self:state()
 end
 
-function player:act ()
-   if input.held("b") then
-      sound.play("dig1")
-      self:enter_state "dig"
-   elseif input.hit("a") then
-      self:enter_state "jump"
-   elseif
-      input.held("dd") and
-      self.dx == 0 and
-      self.state ~= self.charge
-   then
-      self:enter_state "charge"
-   end
-end
-
 -- General function for movement
 function player:move ()
    -- Set a sort of goal position
@@ -110,7 +95,20 @@ function player:floor ()
 
    -- User input
    self:move()
-   self:act()
+
+   -- Grounded actions
+   if input.held("b") and self.y % 16 == 0 then
+      sound.play("dig1")
+      self:enter_state "dig"
+   elseif input.hit("a") then
+      self:enter_state "jump"
+   elseif
+      input.held("dd") and
+      self.dx == 0 and
+      self.state ~= self.charge
+   then
+      self:enter_state "charge"
+   end
 end
 
 -- In-air falling state
@@ -118,9 +116,11 @@ function player:air ()
    self.fx = 4 + math.floor(self.timer * self.spin_speed % 12)
    self.fy = 6
    self.sy = 1
+
    if tiles.collide(self.x + self.dx, self.y-8)>4 and
       self.dy < 0 and self.timer > 4
    then
+      -- Bonk on rocks
       self.dy = -self.dy
       local bonk = {
          x=self.x-8, y=self.y-8,
@@ -143,17 +143,26 @@ end
 -- Attempt to dig a tile below
 function player:dig ()
    self.dx = 0
-   if self.timer < 15 then
-      local anim = {0,0,1,2,3,3,3,4,5,5,5,6,7,8,0}
+   local anim = {0,1,2,3,4,4,5,5,6,6,6,6,6,7,8,8,8}
+   if self.timer <= #anim then
       self.fx = anim[self.timer]
       self.fy = 7
       self.sy = 2
    else
-      self:enter_state "floor"
+      if self.broketile then
+         self.y = self.y + 3
+         self.spin_speed = 1
+         self:enter_state "air"
+      else
+         self:enter_state "floor"
+      end
    end
    if self.timer == 9 then
       if self.tileon > 0 and self.tileon < 5 then
+         self.broketile = true
          tiles.destroy(self.x, self.y)
+      else
+         self.broketile = false
       end
    end
 end
