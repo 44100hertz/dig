@@ -4,27 +4,12 @@ local draw = require "draw"
 local actors = require "actors"
 local sound = require "sound"
 local sections = require "sections"
+local util = require "util"
 
 local sand = {}
 local binds = {}
 local tile_off = 0
 local slug_y
-
-local rng = function (num)
-   return math.floor(love.math.random() * num+1) - 1
-end
-
-function binom ()
-   local sum = 0
-   for _ = 1,8 do
-      sum = sum + math.random()
-   end
-   return sum / 8
-end
-
-local binom_int = function (num)
-   return math.floor(binom() * num)
-end
 
 -- bind an actor to a given space, notify them when destroyed
 local bind = function (x, y, actor)
@@ -42,20 +27,25 @@ local gen_row = function (row)
    end
 
    -- Gaps, 0
-   local num_gaps = binom_int(section.gaps)
-   for _ = 1,num_gaps do sand[row][rng(15)] = 0 end
+   local num_gaps = util.binom_int(section.gaps)
+   for _ = 1,num_gaps do
+      local col = util.rng(15)
+      if sand[row-1] and sand[row-1][col] > 0 then
+         sand[row][col] = 0
+      end
+   end
 
    -- Rocks, 2
-   local num_rocks = binom_int(8 * section.rocks)
+   local num_rocks = util.binom_int(8 * section.rocks)
    local big_rock = row > 1 and num_rocks >= 4
    if big_rock then num_rocks = num_rocks - 4 end
    for _ = 1,num_rocks do
-      sand[row][rng(15)] = 5
+      sand[row][util.rng(15)] = 5
    end
 
    -- Sometimes make big rocks, 9 10 11 12
    if big_rock then
-      local x = rng(14)+1 -- Find a valid x pos
+      local x = util.rng(14)+1 -- Find a valid x pos
       if sand[row][x] < 9 -- Check if usable spaces
          and sand[row][x-1] < 9
          and sand[row-1][x] < 9
@@ -69,7 +59,7 @@ local gen_row = function (row)
    end
 
    -- Gems, 3 4 5
-   local gem_x = rng(15)
+   local gem_x = util.rng(15)
    if math.random() < 1/8 and sand[row] and sand[row][gem_x]>0 then
       local gem = {
          x=gem_x*16, y=row*16,
@@ -81,10 +71,10 @@ local gen_row = function (row)
 
    -- Generate 1 slug every N rows
    if row > 5 and row % section.slug_every == 0 then
-      slug_y = rng(section.slug_every) + row
+      slug_y = util.rng(section.slug_every) + row
    end
    if row == slug_y then
-      local slug_x = rng(15)
+      local slug_x = util.rng(15)
       if sand[row] and sand[row][slug_x]<5 then
          local slug = {
             x=slug_x*16, y=row*16,

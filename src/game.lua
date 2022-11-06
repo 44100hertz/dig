@@ -1,3 +1,4 @@
+local util = require "util"
 local draw = require "draw"
 local tiles = require "tiles"
 local actors = require "actors"
@@ -10,6 +11,7 @@ local scroll, dscroll
 local bg_canvas, bg_quad
 local controls_quad
 local points
+local ghost_timer = 0
 bg_canvas = love.graphics.newCanvas(32, 32)
 bg_canvas:setWrap("repeat", "repeat")
 
@@ -37,6 +39,8 @@ function game.reset_score ()
 end
 
 function game.update ()
+   local section = sections.section(scroll/16)
+
    if scroll >= 0 then
       points = points + (-dscroll * 10 / 16)
    end
@@ -45,13 +49,12 @@ function game.update ()
    tiles.update(scroll)
    actors.update(scroll)
 
-   -- ghosts per frame per scroll
-
-   local section = sections.section(scroll/16)
-   if math.random() < section.ghosts / 90 then
+   ghost_timer = ghost_timer - 1
+   if ghost_timer <= 0 then
       local ghost_side = math.random()*120 + player.x > 180
       local ghost_y = math.random()*160 + 40 + scroll
       actors.add(require "actors/ghost", {y=ghost_y, left=ghost_side})
+      ghost_timer = util.binom() * section.ghost_every * 60
    end
 
    status:update(points, player.y/16)
@@ -72,7 +75,7 @@ function game.draw ()
 
    love.graphics.push()
    love.graphics.translate(0, -scroll)
-   love.graphics.setColor(sections.color(scroll))
+   love.graphics.setColor(sections.color(scroll/16))
    tiles.draw(scroll)
    draw.draw()
    love.graphics.setColor(1,1,1,1)
@@ -93,5 +96,15 @@ end
 function game.score (amt)
    points = points + amt
 end
+
+game.plot = [[ You are an AI gardening bot, the Kawaii crab model. Your owner
+has passed away, and they tossed you into a junk yard. But just as you were
+about to be crushed, a piece of debris fell down and turned you back on. So, you
+integrated back into society. But, work is a lot of trouble these days -- they
+just don't have a good use for you, wath a market full of of cuter products
+which have left you outdated. Determined to prove your worth, you found your way
+into a gem mine -- one which has been abandoned due to the presence of
+machinery-eating slugs from Mars, as well as electromagnetic spirits which can
+easily fry your circuits. Foolish crab! How deep can you dig? ]]
 
 return game
