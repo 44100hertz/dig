@@ -12,18 +12,13 @@ local bg_canvas, bg_quad
 local controls_quad
 local points
 local ghost_timer = 0
-bg_canvas = love.graphics.newCanvas(32, 32)
+local bg_canvas = love.graphics.newImage "res/bg.png"
 bg_canvas:setWrap("repeat", "repeat")
 
 local game = {}
 
 function game.init ()
    title_freeze = true
-   bg_canvas:renderTo(function ()
-         local quad = love.graphics.newQuad(32, 32, 32, 32,
-                                            draw.img:getDimensions())
-         love.graphics.draw(draw.img, quad)
-   end)
    bg_quad = love.graphics.newQuad(0, 0, 240, 160+32, 32, 32)
 
    scroll = -240
