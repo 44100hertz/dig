@@ -1,10 +1,11 @@
 local game = require "game"
 local actors = require "actors"
+local sound = require "sound"
 
 local pts = {
-   [0] = {10, 30},
-   {20, 60},
-   {30, 90},
+   [0] = {10, 20},
+   {20, 40},
+   {30, 60},
 }
 
 local gem_collect = {
@@ -23,6 +24,7 @@ return {
    end,
 
    destroy = function (self)
+     sound.play'gem'
       self.die = true
       game.score(pts[self.kind][self.big])
       local gem = {

@@ -70,7 +70,7 @@ function player:floor ()
       self.sy = 1
       self.dx, self.dy = 0,0
       self.y = math.floor(self.y * (1/16)) * 16
-      sound.play("land")
+--      sound.play("land")
       if self.tileon == 1 then
          local sand = {
             fy=1, priority=true,
@@ -98,7 +98,6 @@ function player:floor ()
 
    -- Grounded actions
    if input.held("b") and self.y % 16 == 0 then
-      sound.play("dig1")
       self:enter_state "dig"
    elseif input.hit("a") then
       self:enter_state "jump"
@@ -132,7 +131,7 @@ function player:air ()
       tiles.collide(self.x, self.y-16)<5 and self.dy > 0
    then
       -- If on potential ledge top not below a rock, and falling, land
-      self:enter_state "floor"
+      self:enter_state "land"
    else
       -- If still in air
       self:move()
@@ -203,6 +202,9 @@ end
 function player:dead ()
    self.sy = 1
    self.dx = 0
+   if self.timer == 1 then
+      sound.play'death'
+   end
    if self.tileon == 0 then
       self.fx, self.fy = 8, 6
       self.dy = 1

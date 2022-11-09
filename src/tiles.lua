@@ -135,13 +135,17 @@ function tiles.draw (scroll)
 end
 
 function tiles.destroy (x, y)
+   local soundpos = {x/240*2-1, 1, 0}
    x = math.floor(x / 16)
    y = math.floor(y / 16)
    if sand[y][x] > 0 and sand[y][x] < 5 then
+      sound.play("digsand", soundpos)
       tiles.break_one(x, y)
    elseif sand[y][x] == 5 then
+      sound.play("rockbust", soundpos)
       tiles.break_one(x, y, true)
    elseif sand[y][x] > 5 then
+      sound.play("bigrockbust", soundpos)
       local startx = sand[y][x] == 9 and x or x-1
       for xx = startx, startx+1 do
          for yy = y, y+1 do
@@ -157,7 +161,6 @@ function tiles.break_one (x, y, is_rock)
          actors.add(require "actors/particle", {x=x*16, y=y*16, fy=4})
       end
    else
-      sound.play("dig2")
       local particle = { x=x*16, y=y*16, fy=0, lifetime=20 }
       actors.add(require "actors/particle", particle)
    end

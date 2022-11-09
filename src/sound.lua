@@ -1,5 +1,10 @@
 local soundlist = {
-   "dig1", "dig2", "land"
+   "digsand1",
+   "digsand2",
+   "rockbust",
+   "bigrockbust",
+   "gem",
+   "death",
 }
 
 local sounds = {}
@@ -11,12 +16,17 @@ for k,v in ipairs(soundlist) do
 end
 
 return {
-   play = function (sound, chan)
-      chan = chan or 1
-      if chans[chan] then chans[chan]:stop() end
-      if sounds[sound] then
-         chans[chan] = sounds[sound]
---         chans[chan]:play()
+   play = function (name, pos)
+      if name == "digsand" then
+         name = "digsand" .. (math.random() < 0.5 and '1' or '2')
       end
-   end
+      if not sounds[name] then
+         print('sound does not exist: ', name)
+      end
+      if pos then
+         sounds[name]:setPosition(unpack(pos))
+      end
+      love.audio.stop(sounds[name])
+      love.audio.play(sounds[name])
+   end,
 }
