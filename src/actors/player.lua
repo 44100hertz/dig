@@ -120,6 +120,7 @@ function player:air ()
       self.dy < 0 and self.timer > 4
    then
       -- Bonk on rocks
+      sound.play('headbang', {self.x/240*2-1, 1, 0})
       self.dy = -self.dy
       local bonk = {
          x=self.x-8, y=self.y-8,
@@ -156,6 +157,7 @@ function player:dig ()
          self:enter_state "air"
       else
          self:enter_state "floor"
+         sound.play('headbang', {self.x/240*2-1, 1, 0})
       end
    end
    if self.timer == 9 then

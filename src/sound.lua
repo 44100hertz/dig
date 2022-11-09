@@ -5,6 +5,7 @@ local soundlist = {
    "bigrockbust",
    "gem",
    "death",
+   "headbang",
 }
 
 local sounds = {}
