@@ -150,7 +150,9 @@ function player:dig ()
       self.sy = 2
    else
       if self.broketile then
-         self.y = self.y + 3
+         if input.held 'b' then
+            self.y = self.y + 3
+         end
          self.spin_speed = 1
          self:enter_state "air"
       else
