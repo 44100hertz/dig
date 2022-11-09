@@ -54,7 +54,7 @@ end
 -- Lag state before a jump
 function player:jump ()
    self.dx = 0
-   if self.timer == 4 then
+   if self.timer == 2 then
       self:move()
       self.dy = -3
       self.spin_speed = 0.5
@@ -62,11 +62,13 @@ function player:jump ()
    end
 end
 
--- Grounded
-function player:floor ()
-   -- Hitting ground
-   if self.timer == 1 then
-      self.fy = 6
+-- Landing lag state
+function player:land ()
+   self.dx = 0
+   self.dy = 0
+   self.fx = 0
+   self.fy = 7
+   if self.timer == 3 then
       self.sy = 1
       self.dx, self.dy = 0,0
       self.y = math.floor(self.y * (1/16)) * 16
@@ -78,8 +80,13 @@ function player:floor ()
          }
          actors.add(require "actors/particle", sand)
       end
+      self:enter_state "floor"
    end
+end
 
+-- Grounded
+function player:floor ()
+   self.fy = 6
    -- Walking anim
    if self.dx < 0 then self.fx = math.floor(self.timer*0.5 % 4)
    elseif self.dx > 0 then self.fx = math.floor(-self.timer*0.5 % 4)
@@ -189,6 +196,7 @@ function player:charge ()
    self.fy = 7
    self.sy = 2
    if not input.held("dd") then
+      self.fy = 6
       self:enter_state "floor"
    end
    if self.timer > 30 then
