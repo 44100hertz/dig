@@ -1,5 +1,6 @@
 local game = require "game"
 local status = require "status"
+local input = require "input"
 
 local state = {
    state = 'title',
@@ -15,7 +16,7 @@ function state:update ()
    self.timer = self.timer + 1
    if self.state == 'title' then
       if self.timer == 1 then game.init() end
-      if love.keyboard.isScancodeDown 'return' then
+      if love.keyboard.isScancodeDown 'return' or input.hit'a' then
          self:set_state 'ingame'
       end
    elseif self.state == 'ingame' then

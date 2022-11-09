@@ -62,8 +62,8 @@ function game.draw ()
       -- Title
       draw.add(10, 9, 24, -210, 6, 3, false, true)
       if love.timer.getTime() % 1 < 0.5 then
-         -- enter prompt
-         draw.add(10, 12, 24, -120, 6, 1)
+         -- press enter/a prompt
+         draw.add(10, 12, 30, -120, 6, 1)
       end
       draw.add(10, 2, 82, -64, 6, 3)
    end
