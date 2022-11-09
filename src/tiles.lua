@@ -107,57 +107,72 @@ local draw_tile = function(x, y)
    end
 end
 
-return {
-   init = function ()
-      for y = 0,15 do gen_row(y, 0) end
-   end,
+local tiles = {}
 
-   update = function (scroll)
-      tile_off = math.floor(scroll / 16)
-      local maxoff = tile_off+15
-      -- If sand are offscreen, generate more
-      if not sand[maxoff] then
-         sand[tile_off-1] = nil
-         gen_row(maxoff)
-      end
-   end,
+function tiles.init ()
+   for y = 0,15 do gen_row(y, 0) end
+end
 
-   draw = function (scroll)
-      -- Draw 11 rows of sand; max possible visible
-      for y = tile_off,tile_off+11 do
-         if sand[y] then
-            for x = 0,15 do
-               draw_tile(x, y, scroll)
-            end
+function tiles.update (scroll)
+   tile_off = math.floor(scroll / 16)
+   local maxoff = tile_off+15
+   -- If sand are offscreen, generate more
+   if not sand[maxoff] then
+      sand[tile_off-1] = nil
+      gen_row(maxoff)
+   end
+end
+
+function tiles.draw (scroll)
+   -- Draw 11 rows of sand; max possible visible
+   for y = tile_off,tile_off+11 do
+      if sand[y] then
+         for x = 0,15 do
+            draw_tile(x, y, scroll)
          end
       end
-   end,
+   end
+end
 
-   destroy = function (x, y)
-      x = math.floor(x / 16)
-      y = math.floor(y / 16)
-      if sand[y][x] > 0 and sand[y][x] < 5 then
-         sound.play("dig2")
-         local particle = { x=x*16, y=y*16, fy=0, lifetime=20 }
-         actors.add(require "actors/particle", particle)
-      elseif sand[y][x] > 4 then
-         -- play rock breaking sound
-         -- spawn rock particles
-         for _ = 1,10 do
-            actors.add(require "actors/particle", {x=x*16, y=y*16, fy=4})
+function tiles.destroy (x, y)
+   x = math.floor(x / 16)
+   y = math.floor(y / 16)
+   if sand[y][x] > 0 and sand[y][x] < 5 then
+      tiles.break_one(x, y)
+   elseif sand[y][x] == 5 then
+      tiles.break_one(x, y, true)
+   elseif sand[y][x] > 5 then
+      local startx = sand[y][x] == 9 and x or x-1
+      for xx = startx, startx+1 do
+         for yy = y, y+1 do
+            tiles.break_one(xx, yy, true)
          end
       end
-      sand[y][x] = 0
-      if binds[y] and binds[y][x] then
-         binds[y][x]:destroy()
-      end
-   end,
+   end
+end
 
-   -- test collision, assumes 16x16 object with corner at x, y
-   -- returns the tile that was collided with
-   collide = function (x, y)
-      x = math.floor(x/16)
-      y = math.floor(y/16)
-      return sand[y] and sand[y][x] or 0
-   end,
-}
+function tiles.break_one (x, y, is_rock)
+   if is_rock then
+      for _ = 1,10 do
+         actors.add(require "actors/particle", {x=x*16, y=y*16, fy=4})
+      end
+   else
+      sound.play("dig2")
+      local particle = { x=x*16, y=y*16, fy=0, lifetime=20 }
+      actors.add(require "actors/particle", particle)
+   end
+   sand[y][x] = 0
+   if binds[y] and binds[y][x] then
+      binds[y][x]:destroy()
+   end
+end
+
+-- test collision, assumes 16x16 object with corner at x, y
+-- returns the tile that was collided with
+function tiles.collide (x, y)
+   x = math.floor(x/16)
+   y = math.floor(y/16)
+   return sand[y] and sand[y][x] or 0
+end
+
+return tiles
