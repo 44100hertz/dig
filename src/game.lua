@@ -54,8 +54,12 @@ function game.update ()
 
    status:update(points, player.y/16)
 
-   if _G.DEBUG and love.keyboard.isScancodeDown 'tab' then
-      scroll = scroll + 8
+   if _G.DEBUG then
+      if love.keyboard.isScancodeDown 'tab' then
+         scroll = scroll + 8
+      elseif love.keyboard.isScancodeDown 'k' then
+         player:enter_state 'dead'
+      end
    end
 end
 
