@@ -15,7 +15,7 @@ function sections.color (row)
 end
 
 function sections.section_index (row)
-   return math.max(1, 1 + math.min(math.floor(row / 50), #sections))
+   return math.max(1, 1 + math.min(math.floor(row / 50), #sections-1))
 end
 
 function sections.section (row)
