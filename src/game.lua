@@ -53,6 +53,10 @@ function game.update ()
    end
 
    status:update(points, player.y/16)
+
+   if _G.DEBUG and love.keyboard.isScancodeDown 'tab' then
+      scroll = scroll + 8
+   end
 end
 
 function game.draw ()
