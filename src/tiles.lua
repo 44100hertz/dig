@@ -28,7 +28,7 @@ local gen_row = function (row)
    end
 
    -- Gaps, 0
-   local num_gaps = util.binom_int(section.gaps)
+   local num_gaps = util.rng(section.gaps)
    for _ = 1,num_gaps do
       local col = util.rng(15)
       if sand[row-1] and sand[row-1][col] > 0 then
