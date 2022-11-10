@@ -1,4 +1,5 @@
 local util = require "util"
+local input = require "input"
 local draw = require "draw"
 local tiles = require "tiles"
 local actors = require "actors"
@@ -73,7 +74,12 @@ function game.draw ()
          -- press enter/a prompt
          draw.add(10, 12, 30, -120, 6, 1)
       end
-      draw.add(10, 2, 82, -64, 6, 3)
+      -- Controls
+      if input.usecontroller then
+         draw.add(6, 13, 82, -64, 6, 3)
+      else
+         draw.add(0, 13, 82, -64, 6, 3)
+      end
    end
 
    love.graphics.push()
