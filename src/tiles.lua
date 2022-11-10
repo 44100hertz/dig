@@ -24,7 +24,7 @@ local gen_row = function (row)
    sand[row] = {}
    sand[row-40] = nil
    for i = 0,15 do
-      sand[row][i] = math.floor(section_index/2+0.5)
+      sand[row][i] = (section_index-1) % 3 + 1
    end
 
    -- Gaps, 0
