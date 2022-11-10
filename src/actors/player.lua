@@ -199,7 +199,9 @@ function player:charge ()
       self.fy = 6
       self:enter_state "floor"
    end
-   if self.timer > 30 then
+   if self.timer == 30 then
+      sound.play "charged"
+   elseif self.timer > 30 then
       self.fx = math.floor(self.timer / 8.0 % 2) + 10
       if input.hit("b") then
          self:enter_state "crack"
