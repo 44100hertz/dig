@@ -39,12 +39,14 @@ function player:move ()
          fy=2, flip=false, dx=0.5,
          x=self.x+4, y=self.y-8,
       }
+      sound.play_at_xy('turnaround', sand.x, sand.y)
       actors.add(require "actors/particle", sand)
    elseif self.dx < 1 and new_dx == 1 and self.tileon == 1 then
       local sand = {
          fy=2, flip=true, dx=-0.5,
          x=self.x-4, y=self.y-8,
       }
+      sound.play_at_xy('turnaround', sand.x, sand.y)
       actors.add(require "actors/particle", sand)
    end
 
@@ -68,11 +70,12 @@ function player:land ()
    self.dy = 0
    self.fx = 0
    self.fy = 7
-   if self.timer == 3 then
+   if self.timer == 1 then
+      sound.play_at_xy('land', self.x, self.y)
+   elseif self.timer == 3 then
       self.sy = 1
       self.dx, self.dy = 0,0
       self.y = math.floor(self.y * (1/16)) * 16
---      sound.play("land")
       if self.tileon == 1 then
          local sand = {
             fy=1, priority=true,
@@ -87,10 +90,19 @@ end
 -- Grounded
 function player:floor ()
    self.fy = 6
+   self.sy = 1
    -- Walking anim
-   if self.dx < 0 then self.fx = math.floor(self.timer*0.5 % 4)
-   elseif self.dx > 0 then self.fx = math.floor(-self.timer*0.5 % 4)
-   else self.fx = 0
+   if self.dx ~= 0 then
+      if self.timer % 10 == 0 then
+         sound.play_at_xy('turnaround', self.x, self.y)
+      end
+      if self.dx < 0 then
+         self.fx = math.floor(self.timer*0.5 % 4)
+      else
+         self.fx = math.floor(-self.timer*0.5 % 4)
+      end
+   else
+      self.fx = 0
    end
 
    -- If not actually grounded, enter_state air state
@@ -127,7 +139,7 @@ function player:air ()
       self.dy < 0 and self.timer > 4
    then
       -- Bonk on rocks
-      sound.play('headbang', {self.x/240*2-1, 1, 0})
+      sound.play_at_xy('headbang', self.x, self.y)
       self.dy = -self.dy
       local bonk = {
          x=self.x-8, y=self.y-8,
@@ -164,7 +176,7 @@ function player:dig ()
          self:enter_state "air"
       else
          self:enter_state "floor"
-         sound.play('headbang', {self.x/240*2-1, 1, 0})
+         sound.play_at_xy('headbang', self.x, self.y)
       end
    end
    if self.timer == 9 then
@@ -200,7 +212,7 @@ function player:charge ()
       self:enter_state "floor"
    end
    if self.timer == 30 then
-      sound.play "charged"
+      sound.play"charged"
    elseif self.timer > 30 then
       self.fx = math.floor(self.timer / 8.0 % 2) + 10
       if input.hit("b") then
@@ -220,7 +232,7 @@ function player:dead ()
    if self.tileon == 0 then
       self.fx, self.fy = 8, 6
       self.dy = 1
-      self.timer = 0
+      self.timer = 5
    elseif self.timer < 20 then
       self.dy = 0
       self.fx = math.floor(self.timer / 4.0)

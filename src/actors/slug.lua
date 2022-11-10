@@ -1,4 +1,5 @@
 local tiles = require "tiles"
+local sound = require 'sound'
 
 local slug = {
    hbox={x=-0.5, y=-3, w=1, h=3},
@@ -37,6 +38,7 @@ function slug:update (scroll)
       self.dy = math.min(self.dy + 0.1, 2)
    else
       if self.falling then
+         sound.play_at_xy('slugland', self.x, self.y)
          if math.random() > 0.6 then self.turnaround = 4 end
          self.falling = false
       end

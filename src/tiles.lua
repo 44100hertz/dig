@@ -135,17 +135,16 @@ function tiles.draw (scroll)
 end
 
 function tiles.destroy (x, y)
-   local soundpos = {x/240*2-1, 1, 0}
    x = math.floor(x / 16)
    y = math.floor(y / 16)
    if sand[y][x] > 0 and sand[y][x] < 5 then
-      sound.play("digsand", soundpos)
+      sound.play_at_xy("digsand", x*16, y*16)
       tiles.break_one(x, y)
    elseif sand[y][x] == 5 then
-      sound.play("rockbust", soundpos)
+      sound.play_at_xy("rockbust", x*16, y*16)
       tiles.break_one(x, y, true)
    elseif sand[y][x] > 5 then
-      sound.play("bigrockbust", soundpos)
+      sound.play_at_xy("bigrockbust", x*16, y*16)
       local startx = sand[y][x] == 9 and x or x-1
       for xx = startx, startx+1 do
          for yy = y, y+1 do

@@ -1,3 +1,4 @@
+local sound = require 'sound'
 return {
    hbox={x=0, y=-2, w=1.5, h=4},
    ox=6,
@@ -18,6 +19,7 @@ return {
       self.dy, self.ddy = 0,0
       self.fy = 10
       self.timer = 0
+     sound.play_at_xy('ghost', self.x, self.y)
    end,
 
    update = function (self)

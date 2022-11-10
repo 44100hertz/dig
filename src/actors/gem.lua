@@ -24,7 +24,7 @@ return {
    end,
 
    destroy = function (self)
-     sound.play'gem'
+     sound.play('gem')
       self.die = true
       game.score(pts[self.kind][self.big])
       local gem = {
