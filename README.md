@@ -7,7 +7,7 @@ You are a gardening bot, the Kawaii crab model. Your owner
 has passed away, and they tossed you into a junk yard. But just as you were
 about to be crushed, a piece of debris fell down and turned you back on. After barely escaping the crusher, you decided to
 integrate back into society. But, work is a lot of trouble these days -- they
-just don't have a good use for you, wath a market full of of cuter, more efficient bots
+just don't have a good use for you among a market full of of cuter, more efficient bots
 which have left you outdated. Determined to prove your worth, you found your way
 into a gem mine -- one which has been abandoned due to the presence of
 machinery-eating slugs from Mars, as well as electromagnetic spirits which can
