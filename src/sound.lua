@@ -3,13 +3,14 @@ local soundlist = {
    "digsand2",
    "rockbust",
    "bigrockbust",
-   "gem",
-   "death",
    "headbang",
    "charged",
    "land",
-   "slugland",
+   "jump",
    "turnaround",
+   "death",
+   "gem",
+   "slugland",
    "ghost",
 }
 

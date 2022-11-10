@@ -56,7 +56,9 @@ end
 -- Lag state before a jump
 function player:jump ()
    self.dx = 0
-   if self.timer == 2 then
+   if self.timer == 1 then
+      sound.play_at_xy('jump', self.x, self.y)
+   elseif self.timer == 2 then
       self:move()
       self.dy = -3
       self.spin_speed = 0.5
