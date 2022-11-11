@@ -1,4 +1,5 @@
 local soundlist = {
+   "start",
    "digsand1",
    "digsand2",
    "rockbust",

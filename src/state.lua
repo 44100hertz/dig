@@ -1,6 +1,7 @@
 local game = require "game"
 local status = require "status"
 local input = require "input"
+local sound = require "sound"
 
 local state = {
    state = 'title',
@@ -17,6 +18,7 @@ function state:update ()
    if self.state == 'title' then
       if self.timer == 1 then game.init() end
       if love.keyboard.isScancodeDown 'return' or input.hit'a' then
+         sound.play'start'
          self:set_state 'ingame'
       end
    elseif self.state == 'ingame' then
