@@ -24,6 +24,7 @@ end
 
 sounds.digsand1:setVolume(0.75)
 sounds.digsand2:setVolume(0.75)
+sounds.gem:setVolume(0.75)
 
 local sound = {}
 
@@ -31,7 +32,10 @@ love.audio.setOrientation(0, 0, 1, 0, -1, 0)
 
 function sound.play_at_xy (name, x, y)
    local sx, sy = love.graphics.transformPoint(x, y)
-   sound.play(name, {x/240*2-1, y/160*2-1, 1})
+   if _G.DEBUG and _G.DEBUG.debugsound then
+      _G.DEBUG.show({x, y, sx, sy}, 60)
+   end
+   sound.play(name, {sx/240*2-1, sy/160*2-1, 1})
 end
 
 function sound.play (name, pos)

@@ -8,6 +8,11 @@ function actors.init ()
 end
 
 function actors.update (scroll)
+   -- Enables sounds to play in the correct position
+   love.graphics.push()
+   love.graphics.translate(0, -scroll)
+   --
+
    for i = 1,#actor_list do
       for j = i+1,#actor_list do
          actors.collide(actor_list[i], actor_list[j])
@@ -26,6 +31,8 @@ function actors.update (scroll)
    for k,v in ipairs(actor_list) do
       if v.die then table.remove(actor_list, k) end
    end
+
+   love.graphics.pop()
 end
 
 function actors.calc_hitbox (a)
