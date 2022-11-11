@@ -166,6 +166,8 @@ function tiles.break_one (x, y, is_rock)
    sand[y][x] = 0
    if binds[y] and binds[y][x] then
       binds[y][x]:destroy()
+      binds[y][x] = nil
+      if #binds[y] == 0 then binds[y] = nil end
    end
 end
 
