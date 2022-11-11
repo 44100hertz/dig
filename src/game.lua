@@ -14,11 +14,14 @@ local controls_quad
 local points
 local ghost_timer = 0
 local bg_canvas = love.graphics.newImage "res/bg.png"
+local starttime
 bg_canvas:setWrap("repeat", "repeat")
 
 local game = {}
 
 function game.init ()
+   game.plotwidth = love.graphics.getFont():getWidth(game.plot)
+   starttime = love.timer.getTime()
    title_freeze = true
    bg_quad = love.graphics.newQuad(0, 0, 240, 160+32, 32, 32)
 
@@ -85,6 +88,12 @@ function game.draw ()
    love.graphics.push()
    love.graphics.translate(0, -scroll)
    love.graphics.setColor(sections.color(scroll/16))
+   if scroll < 10 then
+      -- Plot
+      local time = love.timer.getTime() - starttime
+      local tpos = (time*40) % (game.plotwidth + 200)
+      love.graphics.print(game.plot, -tpos + 200, -100)
+   end
    tiles.draw(scroll)
    draw.draw()
    love.graphics.setColor(1,1,1,1)
@@ -106,14 +115,6 @@ function game.score (amt)
    points = points + amt
 end
 
-game.plot = [[ You are an AI gardening bot, the Kawaii crab model. Your owner
-has passed away, and they tossed you into a junk yard. But just as you were
-about to be crushed, a piece of debris fell down and turned you back on. So, you
-integrated back into society. But, work is a lot of trouble these days -- they
-just don't have a good use for you, wath a market full of of cuter products
-which have left you outdated. Determined to prove your worth, you found your way
-into a gem mine -- one which has been abandoned due to the presence of
-machinery-eating slugs from Mars, as well as electromagnetic spirits which can
-easily fry your circuits. Foolish crab! How deep can you dig? ]]
+game.plot = "You are an AI gardening bot, the Kawaii crab model. Your owner has passed away, and they tossed you into a junk yard. But just as you were about to be crushed, a piece of debris fell down and turned you back on. So, you integrated back into society. But, work is a lot of trouble these days -- they just don't have a good use for you, with a market full of of cuter, more useful bots which have left you outdated. Determined to prove your worth, you found your way into a gem mine -- one which has been abandoned due to the presence of machinery-eating slugs from Mars, as well as electromagnetic spirits which can easily fry your circuits. Foolish crab! How deep can you dig?"
 
 return game
