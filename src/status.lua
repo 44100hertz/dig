@@ -1,6 +1,6 @@
 local draw = require "draw"
 
-local score_h = 5
+local score_h = 6
 local depth_h = 15
 
 local status = {
@@ -28,7 +28,7 @@ function status:draw()
    draw.add(12.5, 0.5, 5, depth_h, 2.5, 0.5) -- text 'depth'
    self:draw_num(math.floor(self.depth), 35, depth_h)
 
-   draw.add(10, 1, 210, 0, 1, 0.5)
+   draw.add(10, 1, 210, 1, 1, 0.5) -- text 'top'
    self:draw_num(math.floor(self.top_points), 235, score_h, true)
    self:draw_num(math.floor(self.top_depth), 235, depth_h, true)
    draw.draw()
