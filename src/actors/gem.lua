@@ -11,8 +11,14 @@ local pts = {
 local gem_collect = {
    dy = -1,
    update = function (self)
-      if self.timer == 30 then self.dy = 0 end
-      if self.timer == 60 then self.die = true end
+      if self.timer == 30 then
+        function self:draw ()
+          love.graphics.printf(self.score, self.x+8-25, self.y, 50, 'center')
+          self.fx = nil
+        end
+      elseif self.timer == 60 then
+        self.die = true
+      end
    end
 }
 
@@ -26,11 +32,13 @@ return {
    destroy = function (self)
      sound.play('gem')
       self.die = true
-      game.score(pts[self.kind][self.big])
+      local score = pts[self.kind][self.big]
+      game.score(score)
       local gem = {
          x = self.x, y = self.y,
          fx = self.fx,
          fy = self.fy + 2,
+         score = score,
       }
       actors.add(gem_collect, gem)
    end
