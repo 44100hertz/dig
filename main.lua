@@ -7,24 +7,28 @@ local input = require "input"
 local util = require "util"
 
 local scale = 5
-love.window.setMode(240*scale, 160*scale)
 
-if os.getenv('DIG_DEBUG') then
-   _G.DEBUG = {
-      strings = {},
-      show = function (s, duration)
-         local ser = util.serialize(s)
-         local height = 1
-         for _ in ser:gmatch('\n') do
-            height = height + 1
-         end
-         DEBUG.strings[#DEBUG.strings+1] = {
-            text = ser,
-            height = height,
-            duration = duration or 1,
-         }
-      end,
-   }
+function love.load ()
+   love.window.setMode(240*scale, 160*scale)
+   if os.getenv('DIG_DEBUG') then
+      _G.DEBUG = {
+         strings = {},
+         show = function (s, duration)
+            local ser = util.serialize(s)
+            local height = 1
+            for _ in ser:gmatch('\n') do
+               height = height + 1
+            end
+            DEBUG.strings[#DEBUG.strings+1] = {
+               text = ser,
+               height = height,
+               duration = duration or 1,
+            }
+         end,
+      }
+   end
+   local font = love.graphics.newFont('res/grand9k.ttf', 8, 'mono')
+   love.graphics.setFont(font)
 end
 
 function love.update ()
@@ -38,6 +42,7 @@ function love.draw ()
    love.graphics.scale(scale, scale)
    state:draw()
    love.graphics.pop()
+
    if _G.DEBUG then
       _G.DEBUG.show(collectgarbage("count"))
 
