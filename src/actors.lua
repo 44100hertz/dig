@@ -55,7 +55,7 @@ function actors.draw ()
       if v.priority then actors.draw_one(v) end
    end
    if _G.DEBUG then
-      _G.DEBUG.show('num actors: ' .. #actor_list, 80, 2)
+      _G.DEBUG.show('num actors: ' .. #actor_list)
    end
 end
 
