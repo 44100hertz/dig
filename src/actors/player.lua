@@ -249,6 +249,12 @@ function player:is_dead ()
 end
 
 function player:update ()
+   if _G.DEBUG then
+      if _G.DEBUG.player then
+         _G.DEBUG.show(self)
+      end
+   end
+
    self.tileon = tiles.collide(self.x, self.y)
    self:state()
    self.x = math.max(self.x, 1)
@@ -256,7 +262,8 @@ function player:update ()
 end
 
 function player:collide ()
-   if self.state ~= self.dead then
+   if not (DEBUG and DEBUG.player_invincible) and
+      self.state ~= self.dead then
       self:enter_state "dead"
    end
 end
