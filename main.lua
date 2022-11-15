@@ -12,6 +12,10 @@ function love.load ()
    love.window.setMode(240*scale, 160*scale)
    if os.getenv('DIG_DEBUG') then
       _G.DEBUG = {
+         debugaudio = false,
+         debuggems = false,
+         player = true,
+         player_invincible = false,
          strings = {},
          show = function (s, duration)
             local ser = util.serialize(s)
