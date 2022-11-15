@@ -110,6 +110,8 @@ end
 local tiles = {}
 
 function tiles.init ()
+   sand = {}
+   binds = {}
    for y = 0,15 do gen_row(y, 0) end
 end
 
@@ -120,6 +122,15 @@ function tiles.update (scroll)
    if not sand[maxoff] then
       sand[tile_off-1] = nil
       gen_row(maxoff)
+   end
+
+   if _G.DEBUG and _G.DEBUG.debuggems then
+      DEBUG.show('Gems:')
+      for x,row in pairs(binds) do
+         for y,_ in pairs(row) do
+            DEBUG.show({x=x, y=y})
+         end
+      end
    end
 end
 
