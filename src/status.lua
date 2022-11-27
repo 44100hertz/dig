@@ -6,8 +6,8 @@ local depth_h = 15
 local status = {
    points = 0,
    depth = 0,
-   top_points = 2500,
-   top_depth = 200,
+   top_points = 4000,
+   top_depth = 180,
 }
 
 function status:init ()

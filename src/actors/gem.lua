@@ -3,9 +3,9 @@ local actors = require "actors"
 local sound = require "sound"
 
 local pts = {
-   [0] = {10, 20},
-   {20, 40},
-   {30, 60},
+   [0] = {50, 100},
+   {100, 200},
+   {150, 300},
 }
 
 local gem_collect = {
