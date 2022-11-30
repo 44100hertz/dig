@@ -5,16 +5,17 @@ local log = require "log"
 local state = require "state"
 local input = require "input"
 local util = require "util"
-
-local scale = 5
+local config = require "config"
 
 function love.load ()
-   love.window.setMode(240*scale, 160*scale)
+   love.window.setMode(240*config.scale, 160*config.scale)
    if os.getenv('DIG_DEBUG') then
       _G.DEBUG = {
+         input = true,
+         joystick = true,
          debugaudio = false,
          debuggems = false,
-         player = true,
+         player = false,
          player_invincible = false,
          strings = {},
          show = function (s, duration)
@@ -36,14 +37,14 @@ function love.load ()
 end
 
 function love.update ()
-   input.update()
    state:update()
+   input.update()
 end
 
 function love.draw ()
    love.graphics.push()
    love.graphics.setBlendMode("alpha", "alphamultiply")
-   love.graphics.scale(scale, scale)
+   love.graphics.scale(config.scale, config.scale)
    state:draw()
    love.graphics.pop()
 

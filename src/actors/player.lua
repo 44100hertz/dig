@@ -209,7 +209,7 @@ end
 function player:charge ()
    self.fy = 7
    self.sy = 2
-   if not input.held("dd") then
+   if not input.held"dd" and not input.hit"b" then
       self.fy = 6
       self:enter_state "floor"
    end

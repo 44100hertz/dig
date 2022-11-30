@@ -78,9 +78,9 @@ function game.draw ()
          draw.add(10, 12, 30, -120, 6, 1)
       end
       -- Controls
-      if input.usecontroller then
+      if input.controlMode == 'joystick' then
          draw.add(6, 13, 82, -64, 6, 3)
-      else
+      elseif input.controlMode == 'keyboard' then
          draw.add(0, 13, 82, -64, 6, 3)
       end
    end
@@ -105,6 +105,9 @@ function game.draw ()
    love.graphics.pop()
 
    status:draw(points, player.y / 16)
+   if input.controlMode == 'touch' then
+      input.drawTouchOverlay()
+   end
 end
 
 function game.is_over ()
