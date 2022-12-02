@@ -85,6 +85,9 @@ love.gamepadreleased = function (_, button)
    end
    bup(joyBind[button], 'joy')
 end
+love.joystickhat = function (_, _, direction)
+   joystick = joyBind[direction]
+end
 
 -- -- Touch -- --
 -- Touch button up -- releasing touch rock break presses 'B'
@@ -142,7 +145,7 @@ end
 function input.getTouchButton(mx, my)
    local keys = {
       {'dl', 0, 113, 23, 31},
-      {'dr', 25, 113, 23, 31},
+      {'dr', 32, 113, 23, 31},
       {'dd', 183, 117, 23, 22},
       {'a', 208, 104, 31, 23},
       {'b', 208, 129, 31, 23},
