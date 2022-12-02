@@ -18,7 +18,8 @@ function state:update ()
    if self.state == 'title' then
       if self.timer == 1 then game.init() end
       if love.keyboard.isScancodeDown 'return' or input.hit'a' or
-         #input.touches > 0 then
+         next(love.touch.getTouches())
+      then
          sound.play'start'
          self:set_state 'ingame'
       end
