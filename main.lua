@@ -36,9 +36,15 @@ function love.load ()
    love.graphics.setFont(font)
 end
 
-function love.update ()
-   state:update()
-   input.update()
+local time = 0
+function love.update (dt)
+   time = time + dt
+   local framelen = 1/60
+   if time >= 0 then
+      time = time - framelen
+      state:update()
+      input.update()
+   end
 end
 
 function love.draw ()
