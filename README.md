@@ -1,6 +1,8 @@
 # DiG
 ## By 44100hz 
 
+[Play here](https://44100.xyz/games/dig)
+
 ![Screenshot from 2022-11-10 13-41-42](https://user-images.githubusercontent.com/11461551/201190906-7e96b395-fce3-45cc-a768-c061f5687939.png)
 
 You are a gardening bot, the Kawaii crab model. Your owner
